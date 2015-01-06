@@ -1,0 +1,2 @@
+/** Messg © 2014-2015 Andrey Polischuk github.com/andrepolischuk/messg */
+.messg{color:#fff;cursor:pointer;font-size:14px;left:0;padding:10px 20px;position:fixed;right:0;text-align:center;top:0;z-index:9999}.messg-default{background-color:#fff;border-bottom:1px solid #adadad;color:#333}.messg-success{background-color:#5cb85c;border-bottom:1px solid #4cae4c}.messg-info{background-color:#31b0d5;border-bottom:1px solid #269abc}.messg-warning{background-color:#ec971f;border-bottom:1px solid #d58512}.messg-error{background-color:#c9302c;border-bottom:1px solid #ac2925}
