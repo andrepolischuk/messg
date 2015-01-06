@@ -1,0 +1,16 @@
+{
+  "name": "messg",
+  "description": "Messages via CSS3 animations",
+  "version": "1.0.0",
+  "keywords": [
+    "message",
+    "alert"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/andrepolischuk/messg.git"
+  },
+  "main": "messg.js",
+  "author": "Andrey Polischuk <andre.polischuk@gmail.com>",
+  "license": "MIT"
+}
