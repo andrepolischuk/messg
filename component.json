@@ -7,12 +7,12 @@
     "alert"
   ],
   "repository": "andrepolischuk/messg",
-  "main" : "messg.js",
+  "main" : "index.js",
   "scripts" : [
-    "messg.js"
+    "index.js"
   ],
   "styles" : [
-    "messg.css"
+    "index.css"
   ],
   "license": "MIT"
 }

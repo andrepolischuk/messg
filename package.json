@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git://github.com/andrepolischuk/messg.git"
   },
-  "main": "messg.js",
+  "main": "index.js",
   "author": "Andrey Polischuk <andre.polischuk@gmail.com>",
   "license": "MIT"
 }
