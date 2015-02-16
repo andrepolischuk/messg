@@ -53,3 +53,7 @@ $ npm install messg
 
   * `element` - DOM element class, default `messg`
   * `speed` - show and hide speed (ms), default 250
+
+## License
+
+  MIT
