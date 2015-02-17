@@ -2,30 +2,6 @@
 'use strict';
 
 /**
- * Default type
- */
-
-var DEFAULT_TYPE = 'default';
-
-/**
- * Object options
- */
-
-var options = {};
-
-/**
- * Object class
- */
-
-options.element = 'messg';
-
-/**
- * Transition speed
- */
-
-options.speed = 250;
-
-/**
  * Object types
  */
 
@@ -44,6 +20,26 @@ var types =  [
 var flow = {};
 
 /**
+ * Position
+ */
+
+var position0 = '10px';
+
+/**
+ * Opacity
+ */
+
+var opacity0 = '0.0';
+var opacity1 = '1.0';
+
+/**
+ * Display
+ */
+
+var display0 = 'none';
+var display1 = 'block';
+
+/**
  * Message
  * @param {String} type
  * @param {String} text
@@ -54,7 +50,7 @@ var flow = {};
 function Message(type, text, delay) {
 
   this.id = [
-    options.element,
+    messg.element,
     '_',
     (new Date()).valueOf(),
     (Math.random() * 1000000000).toFixed()
@@ -62,7 +58,7 @@ function Message(type, text, delay) {
 
   this.type = type;
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.delay = delay + options.speed || null;
+  this.delay = delay + messg.speed || null;
   this.element = appendElement(this);
 
 }
@@ -75,10 +71,10 @@ function Message(type, text, delay) {
 Message.prototype.show = function() {
 
   var self = this;
-  self.element.style.display = 'block';
+  self.element.style.display = display1;
 
   setTimeout(function() {
-    self.element.style.opacity = '1.0';
+    self.element.style.opacity = opacity1;
   }, 50);
 
   if (self.delay) {
@@ -95,12 +91,12 @@ Message.prototype.show = function() {
 Message.prototype.hide = function() {
 
   var self = this;
-  self.element.style.opacity = '0.0';
+  self.element.style.opacity = opacity0;
 
   setTimeout(function() {
-    self.element.style.display = 'none';
+    self.element.style.display = display0;
     delete flow[self.id];
-  }, options.speed);
+  }, messg.speed);
 
 };
 
@@ -115,19 +111,20 @@ function appendElement(message) {
 
   var element = document.createElement('div');
 
-  element.style.display = 'none';
-  element.style.opacity = '0.0';
+  element.style.display = display0;
+  element.style.opacity = opacity0;
+  element.style[messg.position] = position0;
 
   element.style.transition = [
-    'opacity',
-    options.speed / 1000 + 's',
+    'all',
+    messg.speed / 1000 + 's',
     'ease-in-out'
   ].join(' ');
 
   element.className = [
-    options.element,
+    messg.element,
     ' ',
-    options.element,
+    messg.element,
     '-',
     message.type
   ].join('');
@@ -187,12 +184,30 @@ function messg(text, type, delay) {
 
   if (!type || typeof type === 'number') {
     delay = type;
-    type = DEFAULT_TYPE;
+    type = types[0];
   }
 
   show(type)(text, delay);
 
 }
+
+/**
+ * Object class
+ */
+
+messg.element = 'messg';
+
+/**
+ * Transition speed
+ */
+
+messg.speed = 250;
+
+/**
+ * Position
+ */
+
+messg.position = 'top';
 
 /**
  * Set options
@@ -206,11 +221,11 @@ messg.set = function(key, value) {
   if (typeof key === 'object') {
     for (var i in key) {
       if (key.hasOwnProperty(i)) {
-        options[i] = key[i];
+        messg[i] = key[i];
       }
     }
   } else if (value) {
-    options[key] = value;
+    messg[key] = value;
   }
 
 };
