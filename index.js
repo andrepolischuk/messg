@@ -20,10 +20,10 @@ var types =  [
 var flow = {};
 
 /**
- * Position
+ * Margin
  */
 
-var position0 = '10px';
+var margin = 10;
 
 /**
  * Opacity
@@ -60,6 +60,7 @@ function Message(type, text, delay) {
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
   this.delay = delay + messg.speed || null;
   this.element = appendElement(this);
+  this.exist = false;
 
 }
 
@@ -71,6 +72,7 @@ function Message(type, text, delay) {
 Message.prototype.show = function() {
 
   var self = this;
+  self.exist = true;
   self.element.style.display = display1;
 
   setTimeout(function() {
@@ -80,6 +82,8 @@ Message.prototype.show = function() {
   if (self.delay) {
     setTimeout(self.hide, self.delay);
   }
+
+  reposition();
 
 };
 
@@ -91,12 +95,15 @@ Message.prototype.show = function() {
 Message.prototype.hide = function() {
 
   var self = this;
+  self.exist = false;
   self.element.style.opacity = opacity0;
 
   setTimeout(function() {
     self.element.style.display = display0;
     delete flow[self.id];
   }, messg.speed);
+
+  reposition();
 
 };
 
@@ -113,7 +120,6 @@ function appendElement(message) {
 
   element.style.display = display0;
   element.style.opacity = opacity0;
-  element.style[messg.position] = position0;
 
   element.style.transition = [
     'all',
@@ -144,6 +150,32 @@ function appendElement(message) {
 }
 
 /**
+ * Flow reposition
+ * @api private
+ */
+
+function reposition() {
+
+  var keys = [];
+  var pos = margin;
+
+  for (var fl in flow) {
+    if (flow.hasOwnProperty(fl)) {
+      keys.push(fl);
+    }
+  }
+
+  for (var i = keys.length - 1; i >= 0; i--) {
+    fl = flow[keys[i]];
+    if (fl.exist) {
+      fl.element.style[messg.position] = pos + 'px';
+      pos += fl.element.offsetHeight + margin;
+    }
+  }
+
+}
+
+/**
  * Show message
  * @param  {String} type
  * @return {Function}
@@ -156,12 +188,6 @@ function show(type) {
 
     if (!type || !text) {
       return;
-    }
-
-    for (var fl in flow) {
-      if (flow.hasOwnProperty(fl)) {
-        flow[fl].hide();
-      }
     }
 
     var message = new Message(type, text, delay);
