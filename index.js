@@ -78,7 +78,9 @@ Message.prototype.show = function() {
   }, 50);
 
   if (self.delay) {
-    setTimeout(self.hide, self.delay);
+    setTimeout(function() {
+      self.hide();
+    }, self.delay);
   }
 
   reposition();
