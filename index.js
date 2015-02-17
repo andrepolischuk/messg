@@ -2,6 +2,12 @@
 'use strict';
 
 /**
+ * Module dependencies
+ */
+
+var uniquid = require('uniquid');
+
+/**
  * Object types
  */
 
@@ -48,20 +54,12 @@ var display1 = 'block';
  */
 
 function Message(type, text, delay) {
-
-  this.id = [
-    messg.element,
-    '_',
-    (new Date()).valueOf(),
-    (Math.random() * 1000000000).toFixed()
-  ].join('');
-
+  this.id = uniquid(messg.element);
   this.type = type;
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
   this.delay = delay + messg.speed || null;
   this.element = appendElement(this);
   this.exist = false;
-
 }
 
 /**

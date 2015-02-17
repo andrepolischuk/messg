@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git://github.com/andrepolischuk/messg.git"
   },
+  "dependencies": {
+    "uniquid": "1.0.1"
+  },
   "main": "index.js",
   "author": "Andrey Polischuk <andre.polischuk@gmail.com>",
   "license": "MIT"

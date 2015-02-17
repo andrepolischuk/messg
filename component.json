@@ -7,11 +7,14 @@
     "alert"
   ],
   "repository": "andrepolischuk/messg",
-  "main" : "index.js",
-  "scripts" : [
+  "dependencies": {
+    "andrepolischuk/uniquid": "1.0.1"
+  },
+  "main": "index.js",
+  "scripts": [
     "index.js"
   ],
-  "styles" : [
+  "styles": [
     "index.css"
   ],
   "license": "MIT"
