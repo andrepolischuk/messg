@@ -5,8 +5,13 @@
  * Module dependencies
  */
 
-var ea = require('ea');
-var evs = require('evs');
+try {
+  var events = require('event');
+} catch (err) {
+  var events = require('component-event');
+}
+
+var each = require('ea');
 var uniquid = require('uniquid');
 
 /**
@@ -58,18 +63,45 @@ var display1 = 'block';
  * @param {String} type
  * @param {String} text
  * @param {Number} delay
- * @param {Object} buttons
  * @api public
  */
 
-function Message(type, text, delay, buttons) {
+function Message(type, text, delay) {
+
   this.id = uniquid(messg.element);
   this.type = type;
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
   this.delay = delay;
   this.exist = false;
-  this.buttons = buttons;
-  this.element = appendElement(this);
+
+  this.element = document.createElement('div');
+  this.element.style.display = display0;
+  this.element.style.opacity = opacity0;
+
+  this.element.style.transition = [
+    'all',
+    messg.speed / 1000 + 's',
+    'ease-in-out'
+  ].join(' ');
+
+  this.element.className = [
+    messg.element,
+    ' ',
+    messg.element,
+    '-',
+    this.type
+  ].join('');
+
+  this.element.id = this.id;
+  this.element.setAttribute('role', this.type);
+
+  this.content = document.createElement('div');
+  this.content.innerHTML = this.text;
+  this.content.className = messg.element + '-text';
+
+  this.element.appendChild(this.content);
+  body.appendChild(this.element);
+
 }
 
 /**
@@ -119,111 +151,62 @@ Message.prototype.hide = function() {
 };
 
 /**
- * Append element to DOM
- * @param  {Object} message
+ * Add button
+ * @param  {String}   name
+ * @param  {Function} fn
  * @return {Object}
- * @api private
+ * @api public
  */
 
-function appendElement(message) {
+Message.prototype.button = function(name, fn) {
 
-  var element = document.createElement('div');
+  var self = this;
 
-  element.style.display = display0;
-  element.style.opacity = opacity0;
-
-  element.style.transition = [
-    'all',
-    messg.speed / 1000 + 's',
-    'ease-in-out'
-  ].join(' ');
-
-  element.className = [
-    messg.element,
-    ' ',
-    messg.element,
-    '-',
-    message.type
-  ].join('');
-
-  element.id = message.id;
-  element.setAttribute('role', message.type);
-
-  if (message.buttons) {
-    appendButtons(message, element);
-  } else {
-    evs.attach(element, 'click', function() {
-      message.hide();
-    });
+  if (!self.buttons) {
+    self.buttons = document.createElement('div');
+    self.buttons.className = messg.element + '-buttons';
+    self.element.insertBefore(self.buttons, self.element.childNodes[0]);
   }
 
-  appendText(message, element);
-  body.appendChild(element);
-  return element;
+  var button = document.createElement('button');
+  button.innerHTML = name;
 
-}
-
-/**
- * Append buttons to element
- * @param {Object} message
- * @param {Object} element
- * @api private
- */
-
-function appendButtons(message, element) {
-
-  var button, buttons = document.createElement('div');
-
-  buttons.className = [
+  button.className = [
     messg.element,
-    '-buttons'
+    '-button'
   ].join('');
 
-  element.appendChild(buttons);
+  self.buttons.appendChild(button);
+  reposition();
 
-  ea(message.buttons, function(handler, k) {
-
-    button = document.createElement('button');
-    button.innerHTML = k;
-
-    button.className = [
-      messg.element,
-      '-button'
-    ].join('');
-
-    buttons.appendChild(button);
-
-    evs.attach(button, 'click', handler === true ? function() {
-      message.hide();
-    } : function() {
-      handler(k);
-      message.hide();
-    });
-
+  events.bind(button, 'click', typeof fn === 'function' ? function() {
+    fn(name);
+    self.hide();
+  } : function() {
+    self.hide();
   });
 
-}
+  return self;
+
+};
 
 /**
- * Append text to element
- * @param {Object} message
- * @param {Object} element
- * @api private
+ * Close when click on element
+ * @return {Object}
+ * @api public
  */
 
-function appendText(message, element) {
+Message.prototype.close = function() {
 
-  var text = document.createElement('div');
-  text.innerHTML = message.text;
+  var self = this;
 
-  text.className = [
-    messg.element,
-    '-text'
-  ].join('');
+  events.bind(self.element, 'click', function() {
+    self.hide();
+  });
 
-  element.appendChild(text);
+  return self;
 
-}
+};
 
 /**
  * Flow reposition
@@ -234,7 +217,7 @@ function reposition() {
 
   var pos = margin;
 
-  ea.reverse(flow, function(message) {
+  each.reverse(flow, function(message) {
     if (message.exist) {
       message.element.style[messg.position] = pos + 'px';
       pos += message.element.offsetHeight + margin;
@@ -248,29 +231,23 @@ function reposition() {
  * @param {String} text
  * @param {String} type
  * @param {Number} delay
- * @param {Object} buttons
  * @api public
  */
 
-function messg(text, type, delay, buttons) {
-
-  buttons = typeof type === 'object' ? type : buttons;
-  buttons = typeof delay === 'object' ? delay : buttons;
-  delay = typeof type === 'number' ? type : delay;
+function messg(text, type, delay) {
 
   if (!text) {
     return;
   }
 
-  var message = new Message(
-    typeof type === 'string' ? type : types[0],
-    text,
-    typeof delay === 'number' ? delay : undefined,
-    typeof buttons === 'object' ? buttons : undefined
-  );
+  delay = typeof type === 'number' ? type : delay;
+  type = typeof type === 'string' ? type : types[0];
 
+  var message = new Message(type, text, delay);
   flow[message.id] = message;
   message.show();
+
+  return message;
 
 }
 
@@ -301,7 +278,7 @@ messg.position = 'top';
 
 messg.set = function(key, value) {
   if (typeof key === 'object') {
-    ea(key, function(val, k) {
+    each(key, function(val, k) {
       messg[k] = val;
     });
   } else if (value) {
@@ -313,13 +290,12 @@ messg.set = function(key, value) {
  * Show message via type
  * @param {String} text
  * @param {Number} delay
- * @param {Object} buttons
  * @api public
  */
 
-ea(types, function(type) {
-  messg[type] = function(text, delay, buttons) {
-    messg(text, type, delay, buttons);
+each(types, function(type) {
+  messg[type] = function(text, delay) {
+    return messg(text, type, delay);
   };
 });
 
