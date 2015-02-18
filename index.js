@@ -22,6 +22,12 @@ var types =  [
 ];
 
 /**
+ * Body ref
+ */
+
+var body = document.getElementsByTagName('body')[0];
+
+/**
  * Messages flow
  */
 
@@ -104,6 +110,7 @@ Message.prototype.hide = function() {
 
   setTimeout(function() {
     self.element.style.display = display0;
+    body.removeChild(self.element);
     delete flow[self.id];
   }, messg.speed);
 
@@ -151,9 +158,7 @@ function appendElement(message) {
   }
 
   appendText(message, element);
-
-  document.getElementsByTagName('body')[0].appendChild(element);
-
+  body.appendChild(element);
   return element;
 
 }
