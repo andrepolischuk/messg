@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "ea": "^0.2.0",
+    "evs": "^0.1.0",
     "uniquid": "^1.0.0"
   },
   "main": "index.js",

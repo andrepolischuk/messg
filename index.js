@@ -6,6 +6,7 @@
  */
 
 var ea = require('ea');
+var evs = require('evs');
 var uniquid = require('uniquid');
 
 /**
@@ -51,16 +52,18 @@ var display1 = 'block';
  * @param {String} type
  * @param {String} text
  * @param {Number} delay
+ * @param {Object} buttons
  * @api public
  */
 
-function Message(type, text, delay) {
+function Message(type, text, delay, buttons) {
   this.id = uniquid(messg.element);
   this.type = type;
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.delay = delay + messg.speed || null;
-  this.element = appendElement(this);
+  this.delay = delay;
   this.exist = false;
+  this.buttons = buttons;
+  this.element = appendElement(this);
 }
 
 /**
@@ -81,7 +84,7 @@ Message.prototype.show = function() {
   if (self.delay) {
     setTimeout(function() {
       self.hide();
-    }, self.delay);
+    }, self.delay + messg.speed);
   }
 
   reposition();
@@ -137,16 +140,83 @@ function appendElement(message) {
   ].join('');
 
   element.id = message.id;
-  element.innerHTML = message.text;
   element.setAttribute('role', message.type);
+
+  if (message.buttons) {
+    appendButtons(message, element);
+  } else {
+    evs.attach(element, 'click', function() {
+      message.hide();
+    });
+  }
+
+  appendText(message, element);
 
   document.getElementsByTagName('body')[0].appendChild(element);
 
-  element.onclick = function() {
-    message.hide();
-  };
-
   return element;
+
+}
+
+/**
+ * Append buttons to element
+ * @param {Object} message
+ * @param {Object} element
+ * @api private
+ */
+
+function appendButtons(message, element) {
+
+  var button, buttons = document.createElement('div');
+
+  buttons.className = [
+    messg.element,
+    '-buttons'
+  ].join('');
+
+  element.appendChild(buttons);
+
+  ea(message.buttons, function(handler, k) {
+
+    button = document.createElement('button');
+    button.innerHTML = k;
+
+    button.className = [
+      messg.element,
+      '-button'
+    ].join('');
+
+    buttons.appendChild(button);
+
+    evs.attach(button, 'click', handler === true ? function() {
+      message.hide();
+    } : function() {
+      handler(k);
+      message.hide();
+    });
+
+  });
+
+}
+
+/**
+ * Append text to element
+ * @param {Object} message
+ * @param {Object} element
+ * @api private
+ */
+
+function appendText(message, element) {
+
+  var text = document.createElement('div');
+  text.innerHTML = message.text;
+
+  text.className = [
+    messg.element,
+    '-text'
+  ].join('');
+
+  element.appendChild(text);
 
 }
 
@@ -169,44 +239,33 @@ function reposition() {
 }
 
 /**
- * Show message
- * @param  {String} type
- * @return {Function}
- * @api private
- */
-
-function show(type) {
-
-  return function(text, delay) {
-
-    if (!type || !text) {
-      return;
-    }
-
-    var message = new Message(type, text, delay);
-    flow[message.id] = message;
-    message.show();
-
-  };
-
-}
-
-/**
  * Module
  * @param {String} text
  * @param {String} type
  * @param {Number} delay
- * @api private
+ * @param {Object} buttons
+ * @api public
  */
 
-function messg(text, type, delay) {
+function messg(text, type, delay, buttons) {
 
-  if (!type || typeof type === 'number') {
-    delay = type;
-    type = types[0];
+  buttons = typeof type === 'object' ? type : buttons;
+  buttons = typeof delay === 'object' ? delay : buttons;
+  delay = typeof type === 'number' ? type : delay;
+
+  if (!text) {
+    return;
   }
 
-  show(type)(text, delay);
+  var message = new Message(
+    typeof type === 'string' ? type : types[0],
+    text,
+    typeof delay === 'number' ? delay : undefined,
+    typeof buttons === 'object' ? buttons : undefined
+  );
+
+  flow[message.id] = message;
+  message.show();
 
 }
 
@@ -249,11 +308,14 @@ messg.set = function(key, value) {
  * Show message via type
  * @param {String} text
  * @param {Number} delay
+ * @param {Object} buttons
  * @api public
  */
 
 ea(types, function(type) {
-  messg[type] = show(type);
+  messg[type] = function(text, delay, buttons) {
+    messg(text, type, delay, buttons);
+  };
 });
 
 /**
