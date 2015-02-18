@@ -5,6 +5,7 @@
  * Module dependencies
  */
 
+var ea = require('ea');
 var uniquid = require('uniquid');
 
 /**
@@ -156,22 +157,14 @@ function appendElement(message) {
 
 function reposition() {
 
-  var keys = [];
   var pos = margin;
 
-  for (var fl in flow) {
-    if (flow.hasOwnProperty(fl)) {
-      keys.push(fl);
+  ea.reverse(flow, function(message) {
+    if (message.exist) {
+      message.element.style[messg.position] = pos + 'px';
+      pos += message.element.offsetHeight + margin;
     }
-  }
-
-  for (var i = keys.length - 1; i >= 0; i--) {
-    fl = flow[keys[i]];
-    if (fl.exist) {
-      fl.element.style[messg.position] = pos + 'px';
-      pos += fl.element.offsetHeight + margin;
-    }
-  }
+  });
 
 }
 
@@ -243,17 +236,13 @@ messg.position = 'top';
  */
 
 messg.set = function(key, value) {
-
   if (typeof key === 'object') {
-    for (var i in key) {
-      if (key.hasOwnProperty(i)) {
-        messg[i] = key[i];
-      }
-    }
+    ea(key, function(val, k) {
+      messg[k] = val;
+    });
   } else if (value) {
     messg[key] = value;
   }
-
 };
 
 /**
@@ -263,9 +252,9 @@ messg.set = function(key, value) {
  * @api public
  */
 
-for (var t = 0; t < types.length; t++) {
-  messg[types[t]] = show(types[t]);
-}
+ea(types, function(type) {
+  messg[type] = show(type);
+});
 
 /**
  * Module exports

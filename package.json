@@ -11,7 +11,8 @@
     "url": "git://github.com/andrepolischuk/messg.git"
   },
   "dependencies": {
-    "uniquid": "1.0.1"
+    "ea": "^0.2.0",
+    "uniquid": "^1.0.0"
   },
   "main": "index.js",
   "author": "Andrey Polischuk <andre.polischuk@gmail.com>",
