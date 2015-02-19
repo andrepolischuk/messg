@@ -1,5 +1,4 @@
 {
-  "name": "messg",
   "description": "Messages via CSS3 animations",
   "version": "1.0.0",
   "keywords": [
@@ -18,6 +17,9 @@
   ],
   "styles": [
     "index.css"
+  ],
+  "templates": [
+    "template.html"
   ],
   "license": "MIT"
 }

@@ -70,12 +70,12 @@
 }
 
 .messg,
-.messg-button {
+.messg button {
   color: #fff;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-.messg-button {
+.messg button {
   background: none;
   border: 0 none;
   cursor: pointer;
@@ -89,42 +89,42 @@
           border-radius: 2px;
 }
 
-.messg-default .messg-button {
+.messg-default button {
   background-color: #1a1a1a;
 }
 
-.messg-default .messg-button:hover {
+.messg-default button:hover {
   background-color: #000;
 }
 
-.messg-success .messg-button {
+.messg-success button {
   background-color: #54b354;
 }
 
-.messg-success .messg-button:hover {
+.messg-success button:hover {
   background-color: #4cae4c;
 }
 
-.messg-info .messg-button {
+.messg-info button {
   background-color: #2ca5c9;
 }
 
-.messg-info .messg-button:hover {
+.messg-info button:hover {
   background-color: #269abc;
 }
 
-.messg-warning .messg-button {
+.messg-warning button {
   background-color: #e18e19;
 }
 
-.messg-warning .messg-button:hover {
+.messg-warning button:hover {
   background-color: #d58512;
 }
 
-.messg-error .messg-button {
+.messg-error button {
   background-color: #bb2d29;
 }
 
-.messg-error .messg-button:hover {
+.messg-error button:hover {
   background-color: #ac2925;
 }

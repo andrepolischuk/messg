@@ -13,6 +13,7 @@ try {
 
 var each = require('ea');
 var uniquid = require('uniquid');
+var template = require('./template.html');
 
 /**
  * Object types
@@ -31,6 +32,12 @@ var types =  [
  */
 
 var body = document.getElementsByTagName('body')[0];
+
+/**
+ * Prefix
+ */
+
+var prefix = 'messg';
 
 /**
  * Messages flow
@@ -68,39 +75,48 @@ var display1 = 'block';
 
 function Message(type, text, delay) {
 
-  this.id = uniquid(messg.element);
-  this.type = type;
-  this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.delay = delay;
-  this.exist = false;
+  var self = this;
 
-  this.element = document.createElement('div');
-  this.element.style.display = display0;
-  this.element.style.opacity = opacity0;
+  self.id = uniquid(prefix);
+  self.type = type;
+  self.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
+  self.delay = delay;
+  self.exist = false;
 
-  this.element.style.transition = [
+  self.element = document.createElement('div');
+  self.element.innerHTML = template;
+  self.element = self.element.children[0];
+  self.element.style.display = display0;
+  self.element.style.opacity = opacity0;
+
+  self.element.style.transition = [
     'all',
     messg.speed / 1000 + 's',
     'ease-in-out'
   ].join(' ');
 
-  this.element.className = [
-    messg.element,
+  self.element.className += [
     ' ',
-    messg.element,
+    prefix,
     '-',
-    this.type
+    self.type
   ].join('');
 
-  this.element.id = this.id;
-  this.element.setAttribute('role', this.type);
+  self.element.id = self.id;
+  self.element.setAttribute('role', self.type);
+  self.buttons = self.element.children[0];
+  self.content = self.element.children[1];
+  self.content.innerHTML = self.text;
 
-  this.content = document.createElement('div');
-  this.content.innerHTML = this.text;
-  this.content.className = messg.element + '-text';
+  body.appendChild(self.element);
 
-  this.element.appendChild(this.content);
-  body.appendChild(this.element);
+  setTimeout(function() {
+    if (!self.buttons.children.length) {
+      events.bind(self.element, 'click', function() {
+        self.hide();
+      });
+    }
+  }, messg.speed);
 
 }
 
@@ -162,45 +178,16 @@ Message.prototype.button = function(name, fn) {
 
   var self = this;
 
-  if (!self.buttons) {
-    self.buttons = document.createElement('div');
-    self.buttons.className = messg.element + '-buttons';
-    self.element.insertBefore(self.buttons, self.element.childNodes[0]);
-  }
-
   var button = document.createElement('button');
   button.innerHTML = name;
-
-  button.className = [
-    messg.element,
-    '-button'
-  ].join('');
 
   self.buttons.appendChild(button);
   reposition();
 
   events.bind(button, 'click', typeof fn === 'function' ? function() {
-    fn(name);
+    fn(name.toLowerCase());
     self.hide();
   } : function() {
-    self.hide();
-  });
-
-  return self;
-
-};
-
-/**
- * Close when click on element
- * @return {Object}
- * @api public
- */
-
-Message.prototype.close = function() {
-
-  var self = this;
-
-  events.bind(self.element, 'click', function() {
     self.hide();
   });
 
@@ -250,12 +237,6 @@ function messg(text, type, delay) {
   return message;
 
 }
-
-/**
- * Object class
- */
-
-messg.element = 'messg';
 
 /**
  * Transition speed
