@@ -7,8 +7,8 @@
   Browser:
 
 ```html
-<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.0.0/messg.min.css" rel="stylesheet">
-<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.0.0/messg.min.js"></script>
+<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.1.0/dist/messg.min.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.1.0/dist/messg.min.js"></script>
 ```
 
   Component(1):
@@ -38,7 +38,6 @@ $ npm install messg
   * warning
   * error
 
-
 ### messg.default(text[, delay])
 ### messg.success(text[, delay])
 ### messg.info(text[, delay])
@@ -47,12 +46,43 @@ $ npm install messg
 
   Aliases for `messg(text[, type, delay])`
 
+```js
+messg.warning('Connection is lost');
+messg.success('Task completed', 2500);
+```
+
 ### messg.set(key, value)
 
   Setting options
 
-  * `element` - DOM element class, default `messg`
-  * `speed` - show and hide speed (ms), default 250
+  * `speed` - show and hide speed (ms), default `250`
+  * `position` - messages position `top` or `bottom`, default `top`
+  * `flow` - disable messages flow if `false`
+
+### messg.button(name[, fn])
+
+  Add buttons with handler
+
+```js
+messg
+  .warning('Are you sure?')
+  .button('Yes', function() {
+
+  })
+  .button('No', function() {
+
+  });
+```
+
+  Add simple close button
+
+```js
+messg
+  .success('Task completed')
+  .button('Ok');
+```
+
+  If buttons not specified, close message by clicking on it
 
 ## License
 
