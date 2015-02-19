@@ -230,6 +230,12 @@ function messg(text, type, delay) {
   delay = typeof type === 'number' ? type : delay;
   type = typeof type === 'string' ? type : types[0];
 
+  if (!messg.flow) {
+    each(flow, function(message) {
+      message.hide();
+    });
+  }
+
   var message = new Message(type, text, delay);
   flow[message.id] = message;
   message.show();
@@ -249,6 +255,12 @@ messg.speed = 250;
  */
 
 messg.position = 'top';
+
+/**
+ * Add to flow
+ */
+
+messg.flow = true;
 
 /**
  * Set options
