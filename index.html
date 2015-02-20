@@ -3,51 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
   <title>Messg</title>
-
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.rawgit.com/andrepolischuk/messg/1.0.0/messg.min.css" rel="stylesheet">
-  <link href="css/page.css" rel="stylesheet">
-
+  <link href="build/index.css" rel="stylesheet">
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
   <![endif]-->
-
 </head>
 <body>
-
   <div class="container">
-
     <div class="page-header">
       <h2>
         Messg
         <small><a href="https://github.com/andrepolischuk/messg">Github</a></small>
       </h2>
     </div>
-
     <div class="row">
-
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12">
-
-        <div class="text-center">
-          <button class="btn btn-default" type="button" onclick="messg(this.innerHTML);">Default</button>
-          <button class="btn btn-success" type="button" onclick="messg.success(this.innerHTML);">Success</button>
-          <button class="btn btn-info" type="button" onclick="messg.info(this.innerHTML);">Info</button>
-          <button class="btn btn-warning" type="button" onclick="messg.warning(this.innerHTML);">Warning</button>
-          <button class="btn btn-danger" type="button" onclick="messg.error(this.innerHTML);">Error</button>
+        <div class="row">
+          <div class="col-sm-2 text-center col-sm-offset-1">
+            <p><button class="btn btn-default" type="button">Default</button></p>
+            <p>Plain</p>
+          </div>
+          <div class="col-sm-2 text-center">
+            <p><button class="btn btn-success" type="button">Success</button></p>
+            <p>With delay</p>
+          </div>
+          <div class="col-sm-2 text-center">
+            <p><button class="btn btn-info" type="button">Info</button></p>
+            <p>With close button</p>
+          </div>
+          <div class="col-sm-2 text-center">
+            <p><button class="btn btn-warning" type="button">Warning</button></p>
+            <p>With action buttons</p>
+          </div>
+          <div class="col-sm-2 text-center">
+            <p><button class="btn btn-danger" type="button">Error</button></p>
+            <p>With OK button</p>
+          </div>
         </div>
-
       </div>
-
     </div>
-
   </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script src="https://cdn.rawgit.com/andrepolischuk/messg/1.0.0/messg.min.js"></script>
-
+  <script src="build/index.js"></script>
 </body>
 </html>
