@@ -13,6 +13,9 @@
     "component/event": "^0.1.4",
     "andrepolischuk/uniquid": "^1.0.0"
   },
+  "development": {
+    "component/assert": "^0.5.0"
+  },
   "main": "index.js",
   "scripts": [
     "index.js"

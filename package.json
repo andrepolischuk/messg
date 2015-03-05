@@ -16,6 +16,9 @@
     "component-event": "^0.1.4",
     "uniquid": "^1.0.0"
   },
+  "devDependencies": {
+    "mocha": "^2.1.0"
+  },
   "main": "index.js",
   "author": "Andrey Polischuk <andre.polischuk@gmail.com>",
   "license": "MIT"
