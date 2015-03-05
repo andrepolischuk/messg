@@ -226,13 +226,20 @@ Message.prototype.show = function() {
  * @api public
  */
 
-Message.prototype.hide = function() {
+Message.prototype.hide = function(fn) {
+
+  if (typeof fn === 'function') {
+    this.fn = fn;
+    return this;
+  }
+
   this.exist = false;
   this.element.style.opacity = opacity0;
 
   var self = this;
 
   setTimeout(function() {
+    if (self.fn) self.fn();
     self.element.style.display = display0;
     body.removeChild(self.element);
     delete flow[self.id];
