@@ -7,8 +7,8 @@
   Browser:
 
 ```html
-<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.1.0/dist/messg.min.css" rel="stylesheet">
-<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.1.0/dist/messg.min.js"></script>
+<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.2.0/messg.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.2.0/messg.min.js"></script>
 ```
 
   Component(1):
@@ -83,6 +83,18 @@ messg
 ```
 
   If buttons not specified, close message by clicking on it
+
+### messg.hide(fn)
+
+  Add hide handler
+
+```js
+messg
+  .warning('Hello!')
+  .hide(function() {
+
+  });
+```
 
 ## License
 
