@@ -84,11 +84,15 @@
 })({
 1: [function(require, module, exports) {
 
+'use strict';
+
 var events = require('component/event');
-var messg = require('andrepolischuk/messg@1.1.0');
+var messg = require('andrepolischuk/messg@1.2.0');
 
 events.bind(document.querySelector('.btn-default'), 'click', function(e) {
-  messg('Close this by click');
+  messg('Close this by click').hide(function() {
+    alert('Closed');
+  });
 }, false);
 
 events.bind(document.querySelector('.btn-success'), 'click', function(e) {
@@ -111,7 +115,7 @@ events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
   messg.error('Connection is lost').button('OK');
 }, false);
 
-}, {"component/event":2,"andrepolischuk/messg@1.1.0":3}],
+}, {"component/event":2,"andrepolischuk/messg@1.2.0":3}],
 2: [function(require, module, exports) {
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
@@ -218,155 +222,13 @@ var display0 = 'none';
 var display1 = 'block';
 
 /**
- * Message
- * @param {String} type
- * @param {String} text
- * @param {Number} delay
- * @api public
+ * Expose message calling
  */
 
-function Message(type, text, delay) {
-
-  var self = this;
-
-  self.id = uniquid(prefix);
-  self.type = type;
-  self.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  self.delay = delay;
-  self.exist = false;
-
-  self.element = document.createElement('div');
-  self.element.innerHTML = template;
-  self.element = self.element.children[0];
-  self.element.style.display = display0;
-  self.element.style.opacity = opacity0;
-
-  self.element.style.transition = [
-    'all',
-    messg.speed / 1000 + 's',
-    'ease-in-out'
-  ].join(' ');
-
-  self.element.className += [
-    ' ',
-    prefix,
-    '-',
-    self.type
-  ].join('');
-
-  self.element.id = self.id;
-  self.element.setAttribute('role', self.type);
-  self.buttons = self.element.children[0];
-  self.content = self.element.children[1];
-  self.content.innerHTML = self.text;
-
-  body.appendChild(self.element);
-
-  setTimeout(function() {
-    if (!self.buttons.children.length) {
-      events.bind(self.element, 'click', function() {
-        self.hide();
-      });
-    }
-  }, messg.speed);
-
-}
+module.exports = messg;
 
 /**
- * Show message
- * @api public
- */
-
-Message.prototype.show = function() {
-
-  var self = this;
-  self.exist = true;
-  self.element.style.display = display1;
-
-  setTimeout(function() {
-    self.element.style.opacity = opacity1;
-  }, 50);
-
-  if (self.delay) {
-    setTimeout(function() {
-      self.hide();
-    }, self.delay + messg.speed);
-  }
-
-  reposition();
-
-};
-
-/**
- * Hide message
- * @api public
- */
-
-Message.prototype.hide = function() {
-
-  var self = this;
-  self.exist = false;
-  self.element.style.opacity = opacity0;
-
-  setTimeout(function() {
-    self.element.style.display = display0;
-    body.removeChild(self.element);
-    delete flow[self.id];
-  }, messg.speed);
-
-  reposition();
-
-};
-
-/**
- * Add button
- * @param  {String}   name
- * @param  {Function} fn
- * @return {Object}
- * @api public
- */
-
-Message.prototype.button = function(name, fn) {
-
-  var self = this;
-
-  var button = document.createElement('button');
-  button.innerHTML = name;
-
-  self.buttons.appendChild(button);
-  reposition();
-
-  events.bind(button, 'click', typeof fn === 'function' ? function() {
-    fn(name.toLowerCase());
-    self.hide();
-  } : function() {
-    self.hide();
-  });
-
-  return self;
-
-};
-
-/**
- * Flow reposition
- * @api private
- */
-
-function reposition() {
-
-  var pos = margin;
-
-  each.reverse(flow, function(message) {
-    if (message.exist) {
-      message.element.style[messg.position] = pos + 'px';
-      pos += message.element.offsetHeight + margin;
-    }
-  });
-
-}
-
-/**
- * Module
+ * Call message
  * @param {String} text
  * @param {String} type
  * @param {Number} delay
@@ -374,10 +236,7 @@ function reposition() {
  */
 
 function messg(text, type, delay) {
-
-  if (!text) {
-    return;
-  }
+  if (!text) return;
 
   delay = typeof type === 'number' ? type : delay;
   type = typeof type === 'string' ? type : types[0];
@@ -391,9 +250,7 @@ function messg(text, type, delay) {
   var message = new Message(type, text, delay);
   flow[message.id] = message;
   message.show();
-
   return message;
-
 }
 
 /**
@@ -415,13 +272,13 @@ messg.position = 'top';
 messg.flow = true;
 
 /**
- * Set options
+ * Expose set options
  * @param {String|Object} key
  * @param {Mixed} value
  * @api public
  */
 
-messg.set = function(key, value) {
+module.exports.set = function(key, value) {
   if (typeof key === 'object') {
     each(key, function(val, k) {
       messg[k] = val;
@@ -432,23 +289,162 @@ messg.set = function(key, value) {
 };
 
 /**
- * Show message via type
+ * Expose message calling via type
  * @param {String} text
  * @param {Number} delay
  * @api public
  */
 
 each(types, function(type) {
-  messg[type] = function(text, delay) {
+  module.exports[type] = function(text, delay) {
     return messg(text, type, delay);
   };
 });
 
 /**
- * Module exports
+ * Message
+ * @param {String} type
+ * @param {String} text
+ * @param {Number} delay
+ * @api public
  */
 
-module.exports = messg;
+function Message(type, text, delay) {
+  this.id = uniquid(prefix);
+  this.type = type;
+  this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
+  this.delay = delay;
+  this.exist = false;
+
+  this.element = document.createElement('div');
+  this.element.innerHTML = template;
+  this.element = this.element.children[0];
+  this.element.style.display = display0;
+  this.element.style.opacity = opacity0;
+
+  this.element.style.transition = [
+    'all',
+    messg.speed / 1000 + 's',
+    'ease-in-out'
+  ].join(' ');
+
+  this.element.className += [
+    ' ',
+    prefix,
+    '-',
+    this.type
+  ].join('');
+
+  this.element.id = this.id;
+  this.element.setAttribute('role', this.type);
+  this.buttons = this.element.children[0];
+  this.content = this.element.children[1];
+  this.content.innerHTML = this.text;
+  body.appendChild(this.element);
+
+  var self = this;
+
+  setTimeout(function() {
+    if (!self.buttons.children.length) {
+      events.bind(self.element, 'click', function() {
+        self.hide();
+      });
+    }
+  }, messg.speed);
+}
+
+/**
+ * Show message
+ * @api public
+ */
+
+Message.prototype.show = function() {
+  this.exist = true;
+  this.element.style.display = display1;
+
+  var self = this;
+
+  setTimeout(function() {
+    self.element.style.opacity = opacity1;
+  }, 50);
+
+  if (this.delay) {
+    setTimeout(function() {
+      self.hide();
+    }, self.delay + messg.speed);
+  }
+
+  reposition();
+};
+
+/**
+ * Hide message
+ * @api public
+ */
+
+Message.prototype.hide = function(fn) {
+
+  if (typeof fn === 'function') {
+    this.fn = fn;
+    return this;
+  }
+
+  this.exist = false;
+  this.element.style.opacity = opacity0;
+
+  var self = this;
+
+  setTimeout(function() {
+    if (self.fn) self.fn();
+    self.element.style.display = display0;
+    body.removeChild(self.element);
+    delete flow[self.id];
+  }, messg.speed);
+
+  reposition();
+};
+
+/**
+ * Add button
+ * @param  {String}   name
+ * @param  {Function} fn
+ * @return {Object}
+ * @api public
+ */
+
+Message.prototype.button = function(name, fn) {
+  var button = document.createElement('button');
+  button.innerHTML = name;
+  this.buttons.appendChild(button);
+  reposition();
+
+  var self = this;
+
+  events.bind(button, 'click', typeof fn === 'function' ? function() {
+    fn(name.toLowerCase());
+    self.hide();
+  } : function() {
+    self.hide();
+  });
+
+  return this;
+};
+
+/**
+ * Flow reposition
+ * @api private
+ */
+
+function reposition() {
+  var pos = margin;
+
+  each.reverse(flow, function(message) {
+    if (message.exist) {
+      message.element.style[messg.position] = pos + 'px';
+      pos += message.element.offsetHeight + margin;
+    }
+  });
+}
 
 }, {"event":2,"component-event":2,"ea":4,"uniquid":5,"./template.html":6}],
 4: [function(require, module, exports) {
@@ -614,11 +610,11 @@ module.exports = ea;
  * @api public
  */
 
-function uniqueID(prefix) {
+module.exports = function(prefix) {
 
   var uid = parseInt([
     (new Date()).valueOf(),
-    (Math.random() * 1000000000).toFixed()
+    (Math.random() * 1000000).toFixed()
   ].join('')).toString(36);
 
   return [
@@ -626,13 +622,7 @@ function uniqueID(prefix) {
     uid
   ].join('');
 
-}
-
-/**
- * Module exports
- */
-
-module.exports = uniqueID;
+};
 
 }, {}],
 6: [function(require, module, exports) {
