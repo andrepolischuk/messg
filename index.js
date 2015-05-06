@@ -15,19 +15,10 @@ var each = require('ea');
 var uniquid = require('uniquid');
 
 /**
- * Template
- */
-
-var template = '<div class="messg">' +
-    '<div class="messg-buttons"></div>' +
-    '<div class="messg-text"></div>' +
-  '</div>';
-
-/**
  * Object types
  */
 
-var types =  [
+var types = [
   'default',
   'success',
   'info',
@@ -46,6 +37,15 @@ var body = document.getElementsByTagName('body')[0];
  */
 
 var prefix = 'messg';
+
+/**
+ * Template
+ */
+
+var template = '<div class="' + prefix + '">' +
+    '<div class="' + prefix + '-buttons"></div>' +
+    '<div class="' + prefix + '-text"></div>' +
+  '</div>';
 
 /**
  * Messages flow
@@ -77,54 +77,29 @@ var display1 = 'block';
  * Expose message calling
  */
 
-module.exports = messg;
-
-/**
- * Call message
- * @param {String} text
- * @param {String} type
- * @param {Number} delay
- * @api public
- */
-
-function messg(text, type, delay) {
-  if (!text) return;
-
-  delay = typeof type === 'number' ? type : delay;
-  type = typeof type === 'string' ? type : types[0];
-
-  if (!messg.flow) {
-    each(flow, function(message) {
-      message.hide();
-    });
-  }
-
-  var message = new Message(type, text, delay);
-  flow[message.id] = message;
-  message.show();
-  return message;
-}
+module.exports = Message;
 
 /**
  * Transition speed
  */
 
-messg.speed = 250;
+Message.speed = 250;
 
 /**
  * Position
  */
 
-messg.position = 'top';
+Message.position = 'top';
 
 /**
  * Add to flow
  */
 
-messg.flow = true;
+Message.flow = true;
 
 /**
  * Expose set options
+ *
  * @param {String|Object} key
  * @param {Mixed} value
  * @api public
@@ -133,15 +108,16 @@ messg.flow = true;
 module.exports.set = function(key, value) {
   if (typeof key === 'object') {
     each(key, function(val, k) {
-      messg[k] = val;
+      Message[k] = val;
     });
   } else if (value) {
-    messg[key] = value;
+    Message[key] = value;
   }
 };
 
 /**
  * Expose message calling via type
+ *
  * @param {String} text
  * @param {Number} delay
  * @api public
@@ -149,23 +125,28 @@ module.exports.set = function(key, value) {
 
 each(types, function(type) {
   module.exports[type] = function(text, delay) {
-    return messg(text, type, delay);
+    if (!text) return;
+    return new Message(text, type, delay);
   };
 });
 
 /**
  * Message
- * @param {String} type
+ *
  * @param {String} text
+ * @param {String} type
  * @param {Number} delay
  * @api public
  */
 
-function Message(type, text, delay) {
+function Message(text, type, delay) {
+  if (!text) return;
+  if (!(this instanceof Message)) return new Message(text, type, delay);
+
   this.id = uniquid(prefix);
-  this.type = type;
+  this.delay = typeof type === 'number' ? type : delay;
+  this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.delay = delay;
   this.exist = false;
 
   this.element = document.createElement('div');
@@ -173,26 +154,24 @@ function Message(type, text, delay) {
   this.element = this.element.children[0];
   this.element.style.display = display0;
   this.element.style.opacity = opacity0;
-
-  this.element.style.transition = [
-    'all',
-    messg.speed / 1000 + 's',
-    'ease-in-out'
-  ].join(' ');
-
-  this.element.className += [
-    ' ',
-    prefix,
-    '-',
-    this.type
-  ].join('');
-
+  this.element.style.transition = 'all ' +
+    Message.speed / 1000 + 's ease-in-out';
+  this.element.className += ' ' + prefix + '-' + this.type;
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.buttons = this.element.children[0];
   this.content = this.element.children[1];
   this.content.innerHTML = this.text;
   body.appendChild(this.element);
+
+  if (!Message.flow) {
+    each(flow, function(message) {
+      message.hide();
+    });
+  }
+
+  flow[this.id] = this;
+  this.show();
 
   var self = this;
 
@@ -202,17 +181,20 @@ function Message(type, text, delay) {
         self.hide();
       });
     }
-  }, messg.speed);
+  }, Message.speed);
 }
 
 /**
  * Show message
+ *
+ * @return {Object}
  * @api public
  */
 
 Message.prototype.show = function() {
   this.exist = true;
   this.element.style.display = display1;
+  reposition();
 
   var self = this;
 
@@ -223,19 +205,19 @@ Message.prototype.show = function() {
   if (this.delay) {
     setTimeout(function() {
       self.hide();
-    }, self.delay + messg.speed);
+    }, self.delay + Message.speed);
   }
 
-  reposition();
+  return this;
 };
 
 /**
  * Hide message
+ *
  * @api public
  */
 
 Message.prototype.hide = function(fn) {
-
   if (typeof fn === 'function') {
     this.fn = fn;
     return this;
@@ -243,6 +225,7 @@ Message.prototype.hide = function(fn) {
 
   this.exist = false;
   this.element.style.opacity = opacity0;
+  reposition();
 
   var self = this;
 
@@ -251,13 +234,12 @@ Message.prototype.hide = function(fn) {
     self.element.style.display = display0;
     body.removeChild(self.element);
     delete flow[self.id];
-  }, messg.speed);
-
-  reposition();
+  }, Message.speed);
 };
 
 /**
  * Add button
+ *
  * @param  {String}   name
  * @param  {Function} fn
  * @return {Object}
@@ -272,10 +254,8 @@ Message.prototype.button = function(name, fn) {
 
   var self = this;
 
-  events.bind(button, 'click', typeof fn === 'function' ? function() {
-    fn(name.toLowerCase());
-    self.hide();
-  } : function() {
+  events.bind(button, 'click', function() {
+    if (typeof fn === 'function') fn(name.toLowerCase());
     self.hide();
   });
 
@@ -284,6 +264,7 @@ Message.prototype.button = function(name, fn) {
 
 /**
  * Flow reposition
+ *
  * @api private
  */
 
@@ -292,7 +273,7 @@ function reposition() {
 
   each.reverse(flow, function(message) {
     if (message.exist) {
-      message.element.style[messg.position] = pos + 'px';
+      message.element.style[Message.position] = pos + 'px';
       pos += message.element.offsetHeight + margin;
     }
   });
