@@ -13,7 +13,15 @@ try {
 
 var each = require('ea');
 var uniquid = require('uniquid');
-var template = require('./template.html');
+
+/**
+ * Template
+ */
+
+var template = '<div class="messg">' +
+    '<div class="messg-buttons"></div>' +
+    '<div class="messg-text"></div>' +
+  '</div>';
 
 /**
  * Object types
