@@ -225,12 +225,12 @@ Message.prototype.hide = function(fn) {
 
   this.exist = false;
   this.element.style.opacity = opacity0;
+  if (this.fn) this.fn();
   reposition();
 
   var self = this;
 
   setTimeout(function() {
-    if (self.fn) self.fn();
     self.element.style.display = display0;
     body.removeChild(self.element);
     delete flow[self.id];
