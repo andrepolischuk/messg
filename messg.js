@@ -38,15 +38,18 @@
    */
 
   function call(id, require){
-    var m = cache[id] = { exports: {} };
+    var m = { exports: {} };
     var mod = modules[id];
     var name = mod[2];
     var fn = mod[0];
 
     fn.call(m.exports, function(req){
       var dep = modules[id][1][req];
-      return require(dep ? dep : req);
+      return require(dep || req);
     }, m, m.exports, outer, modules, cache, entries);
+
+    // store to cache after successful resolve
+    cache[id] = m;
 
     // expose as `name`.
     if (name) cache[name] = cache[id];
@@ -106,13 +109,12 @@ try {
 
 var each = require('ea');
 var uniquid = require('uniquid');
-var template = require('./template.html');
 
 /**
  * Object types
  */
 
-var types =  [
+var types = [
   'default',
   'success',
   'info',
@@ -131,6 +133,15 @@ var body = document.getElementsByTagName('body')[0];
  */
 
 var prefix = 'messg';
+
+/**
+ * Template
+ */
+
+var template = '<div class="' + prefix + '">' +
+    '<div class="' + prefix + '-buttons"></div>' +
+    '<div class="' + prefix + '-text"></div>' +
+  '</div>';
 
 /**
  * Messages flow
@@ -162,54 +173,29 @@ var display1 = 'block';
  * Expose message calling
  */
 
-module.exports = messg;
-
-/**
- * Call message
- * @param {String} text
- * @param {String} type
- * @param {Number} delay
- * @api public
- */
-
-function messg(text, type, delay) {
-  if (!text) return;
-
-  delay = typeof type === 'number' ? type : delay;
-  type = typeof type === 'string' ? type : types[0];
-
-  if (!messg.flow) {
-    each(flow, function(message) {
-      message.hide();
-    });
-  }
-
-  var message = new Message(type, text, delay);
-  flow[message.id] = message;
-  message.show();
-  return message;
-}
+module.exports = Message;
 
 /**
  * Transition speed
  */
 
-messg.speed = 250;
+Message.speed = 250;
 
 /**
  * Position
  */
 
-messg.position = 'top';
+Message.position = 'top';
 
 /**
  * Add to flow
  */
 
-messg.flow = true;
+Message.flow = true;
 
 /**
  * Expose set options
+ *
  * @param {String|Object} key
  * @param {Mixed} value
  * @api public
@@ -218,15 +204,16 @@ messg.flow = true;
 module.exports.set = function(key, value) {
   if (typeof key === 'object') {
     each(key, function(val, k) {
-      messg[k] = val;
+      Message[k] = val;
     });
   } else if (value) {
-    messg[key] = value;
+    Message[key] = value;
   }
 };
 
 /**
  * Expose message calling via type
+ *
  * @param {String} text
  * @param {Number} delay
  * @api public
@@ -234,23 +221,28 @@ module.exports.set = function(key, value) {
 
 each(types, function(type) {
   module.exports[type] = function(text, delay) {
-    return messg(text, type, delay);
+    if (!text) return;
+    return new Message(text, type, delay);
   };
 });
 
 /**
  * Message
- * @param {String} type
+ *
  * @param {String} text
+ * @param {String} type
  * @param {Number} delay
  * @api public
  */
 
-function Message(type, text, delay) {
+function Message(text, type, delay) {
+  if (!text) return;
+  if (!(this instanceof Message)) return new Message(text, type, delay);
+
   this.id = uniquid(prefix);
-  this.type = type;
+  this.delay = typeof type === 'number' ? type : delay;
+  this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.delay = delay;
   this.exist = false;
 
   this.element = document.createElement('div');
@@ -258,26 +250,24 @@ function Message(type, text, delay) {
   this.element = this.element.children[0];
   this.element.style.display = display0;
   this.element.style.opacity = opacity0;
-
-  this.element.style.transition = [
-    'all',
-    messg.speed / 1000 + 's',
-    'ease-in-out'
-  ].join(' ');
-
-  this.element.className += [
-    ' ',
-    prefix,
-    '-',
-    this.type
-  ].join('');
-
+  this.element.style.transition = 'all ' +
+    Message.speed / 1000 + 's ease-in-out';
+  this.element.className += ' ' + prefix + '-' + this.type;
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.buttons = this.element.children[0];
   this.content = this.element.children[1];
   this.content.innerHTML = this.text;
   body.appendChild(this.element);
+
+  if (!Message.flow) {
+    each(flow, function(message) {
+      message.hide();
+    });
+  }
+
+  flow[this.id] = this;
+  this.show();
 
   var self = this;
 
@@ -287,17 +277,20 @@ function Message(type, text, delay) {
         self.hide();
       });
     }
-  }, messg.speed);
+  }, Message.speed);
 }
 
 /**
  * Show message
+ *
+ * @return {Object}
  * @api public
  */
 
 Message.prototype.show = function() {
   this.exist = true;
   this.element.style.display = display1;
+  reposition();
 
   var self = this;
 
@@ -308,19 +301,19 @@ Message.prototype.show = function() {
   if (this.delay) {
     setTimeout(function() {
       self.hide();
-    }, self.delay + messg.speed);
+    }, self.delay + Message.speed);
   }
 
-  reposition();
+  return this;
 };
 
 /**
  * Hide message
+ *
  * @api public
  */
 
 Message.prototype.hide = function(fn) {
-
   if (typeof fn === 'function') {
     this.fn = fn;
     return this;
@@ -328,21 +321,21 @@ Message.prototype.hide = function(fn) {
 
   this.exist = false;
   this.element.style.opacity = opacity0;
+  if (this.fn) this.fn();
+  reposition();
 
   var self = this;
 
   setTimeout(function() {
-    if (self.fn) self.fn();
     self.element.style.display = display0;
     body.removeChild(self.element);
     delete flow[self.id];
-  }, messg.speed);
-
-  reposition();
+  }, Message.speed);
 };
 
 /**
  * Add button
+ *
  * @param  {String}   name
  * @param  {Function} fn
  * @return {Object}
@@ -357,10 +350,8 @@ Message.prototype.button = function(name, fn) {
 
   var self = this;
 
-  events.bind(button, 'click', typeof fn === 'function' ? function() {
-    fn(name.toLowerCase());
-    self.hide();
-  } : function() {
+  events.bind(button, 'click', function() {
+    if (typeof fn === 'function') fn(name.toLowerCase());
     self.hide();
   });
 
@@ -369,6 +360,7 @@ Message.prototype.button = function(name, fn) {
 
 /**
  * Flow reposition
+ *
  * @api private
  */
 
@@ -377,13 +369,13 @@ function reposition() {
 
   each.reverse(flow, function(message) {
     if (message.exist) {
-      message.element.style[messg.position] = pos + 'px';
+      message.element.style[Message.position] = pos + 'px';
       pos += message.element.offsetHeight + margin;
     }
   });
 }
 
-}, {"event":2,"component-event":2,"ea":3,"uniquid":4,"./template.html":5}],
+}, {"event":2,"component-event":2,"ea":3,"uniquid":4}],
 2: [function(require, module, exports) {
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
@@ -426,33 +418,78 @@ exports.unbind = function(el, type, fn, capture){
 'use strict';
 
 /**
+ * Module dependencies
+ */
+
+try {
+  var type = require('type');
+} catch (err) {
+  var type = require('component-type');
+}
+
+/**
  * Has own property
  */
 
 var has = Object.prototype.hasOwnProperty;
 
 /**
- * Types methods
+ * Expose direct iterate
  */
 
-var array = {};
-var object = {};
+module.exports = each;
 
 /**
- * Array each
+ * Expose reverse iterate
+ * @param {Object|Array} obj
+ * @param {Function} fn
+ * @return {Function}
+ * @api public
+ */
+
+module.exports.reverse = function(obj, fn) {
+  return each(obj, fn, 'reverse');
+};
+
+/**
+ * Iteration router
+ * @param {Object|Array} obj
+ * @param {Function} fn
+ * @return {Function}
+ * @api public
+ */
+
+function each(obj, fn, direction) {
+  if (typeof fn === 'function') {
+    switch (type(obj)) {
+      case 'array':
+        return (array[direction] || array)(obj, fn);
+      case 'object':
+        if (type(obj.length) === 'number') {
+          return (array[direction] || array)(obj, fn);
+        }
+        return (object[direction] || object)(obj, fn);
+      case 'string':
+        return (string[direction] || string)(obj, fn);
+    }
+  }
+}
+
+/**
+ * Iterate array
  * @param {Array} obj
  * @param {Function} fn
  * @api private
  */
 
-array.each = function(obj, fn) {
+function array(obj, fn) {
   for (var i = 0; i < obj.length; i++) {
     fn(obj[i], i);
   }
-};
+}
 
 /**
- * Array reverse each
+ * Iterate array in reverse order
  * @param {Array} obj
  * @param {Function} fn
  * @api private
@@ -465,22 +502,22 @@ array.reverse = function(obj, fn) {
 };
 
 /**
- * Object each
+ * Iterate object
  * @param {Object} obj
  * @param {Function} fn
  * @api private
  */
 
-object.each = function(obj, fn) {
+function object(obj, fn) {
   for (var i in obj) {
     if (has.call(obj, i)) {
       fn(obj[i], i);
     }
   }
-};
+}
 
 /**
- * Object reverse each
+ * Iterate object in reverse order
  * @param {Object} obj
  * @param {Function} fn
  * @api private
@@ -499,78 +536,67 @@ object.reverse = function(obj, fn) {
 };
 
 /**
- * Each router
- * @param  {String} method
- * @param  {Object|Array} obj
- * @param  {Function} fn
- * @return {Function}
+ * Iterate string
+ * @param {Array} obj
+ * @param {Function} fn
  * @api private
  */
 
-function route(method, obj, fn) {
-  if (typeof fn === 'function') {
-    switch (is(obj)) {
-      case 'array' :
-        return array[method](obj, fn);
-      case 'object' :
-        return object[method](obj, fn);
-    }
+function string(obj, fn) {
+  for (var i = 0; i < obj.length; i++) {
+    fn(obj.charAt(i), i);
   }
 }
 
 /**
- * Typeof
- * @param  {Object|Array} obj
- * @return {String}
+ * Iterate string in reverse order
+ * @param {Array} obj
+ * @param {Function} fn
  * @api private
  */
 
-function is(obj) {
-  return Object.prototype.toString.call(obj)
-    .replace(/\[\w+\s(\w+)\]/i, '$1').toLowerCase();
-}
-
-/**
- * Module
- * @param {Object|Array} obj
- * @param {Function} fn
- * @return {Function}
- * @api public
- */
-
-function ea(obj, fn) {
-  return ea.each(obj, fn);
-}
-
-/**
- * Each
- * @param {Object|Array} obj
- * @param {Function} fn
- * @return {Function}
- * @api public
- */
-
-ea.each = function(obj, fn) {
-  return route('each', obj, fn);
+string.reverse = function(obj, fn) {
+  for (var i = obj.length - 1; i >= 0 ; i--) {
+    fn(obj.charAt(i), i);
+  }
 };
 
+}, {"type":5,"component-type":5}],
+5: [function(require, module, exports) {
 /**
- * Reverse each
- * @param {Object|Array} obj
- * @param {Function} fn
- * @return {Function}
+ * toString ref.
+ */
+
+var toString = Object.prototype.toString;
+
+/**
+ * Return the type of `val`.
+ *
+ * @param {Mixed} val
+ * @return {String}
  * @api public
  */
 
-ea.reverse = function(obj, fn) {
-  return route('reverse', obj, fn);
+module.exports = function(val){
+  switch (toString.call(val)) {
+    case '[object Date]': return 'date';
+    case '[object RegExp]': return 'regexp';
+    case '[object Arguments]': return 'arguments';
+    case '[object Array]': return 'array';
+    case '[object Error]': return 'error';
+  }
+
+  if (val === null) return 'null';
+  if (val === undefined) return 'undefined';
+  if (val !== val) return 'nan';
+  if (val && val.nodeType === 1) return 'element';
+
+  val = val.valueOf
+    ? val.valueOf()
+    : Object.prototype.valueOf.apply(val)
+
+  return typeof val;
 };
-
-/**
- * Module exports
- */
-
-module.exports = ea;
 
 }, {}],
 4: [function(require, module, exports) {
@@ -598,8 +624,4 @@ module.exports = function(prefix) {
 
 };
 
-}, {}],
-5: [function(require, module, exports) {
-module.exports = '<div class="messg">\n  <div class="messg-buttons"></div>\n  <div class="messg-text"></div>\n</div>\n';
-}, {}]}, {}, {"1":""})
-);
+}, {}]}, {}, {"1":""}));

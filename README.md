@@ -4,13 +4,6 @@
 
 ## Instalation
 
-  Browser:
-
-```html
-<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.2.0/messg.css" rel="stylesheet">
-<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.2.0/messg.min.js"></script>
-```
-
   Component(1):
 
 ```sh
@@ -21,6 +14,13 @@ $ component install andrepolischuk/messg
 
 ```sh
 $ npm install messg
+```
+
+  Umd:
+
+```html
+<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.2.1/messg.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.2.1/messg.js"></script>
 ```
 
 ## API

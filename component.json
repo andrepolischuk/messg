@@ -1,7 +1,7 @@
 {
   "name": "messg",
   "description": "Messages via CSS3 animations",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "keywords": [
     "message",
     "alert",
@@ -22,9 +22,6 @@
   ],
   "styles": [
     "messg.css"
-  ],
-  "templates": [
-    "template.html"
   ],
   "license": "MIT"
 }
