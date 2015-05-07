@@ -2,12 +2,10 @@
 'use strict';
 
 var events = require('component/event');
-var messg = require('andrepolischuk/messg@1.2.0');
+var messg = require('andrepolischuk/messg@1.2.1');
 
 events.bind(document.querySelector('.btn-default'), 'click', function(e) {
-  messg('Close this by click').hide(function() {
-    alert('Closed');
-  });
+  messg('Close this by click');
 }, false);
 
 events.bind(document.querySelector('.btn-success'), 'click', function(e) {
