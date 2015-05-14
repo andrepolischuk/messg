@@ -1,26 +1,12 @@
-# Messg
+# messg
 
-  Messages via CSS3 animations
+  > Messages via CSS3 animations
 
 ## Instalation
 
-  Component(1):
-
 ```sh
+$ npm install --save messg
 $ component install andrepolischuk/messg
-```
-
-  Npm:
-
-```sh
-$ npm install messg
-```
-
-  Umd:
-
-```html
-<link href="https://cdn.rawgit.com/andrepolischuk/messg/1.2.1/messg.css" rel="stylesheet">
-<script src="https://cdn.rawgit.com/andrepolischuk/messg/1.2.1/messg.js"></script>
 ```
 
 ## API
