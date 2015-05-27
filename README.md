@@ -6,6 +6,9 @@
 
 ```sh
 $ npm install --save messg
+```
+
+```js
 $ component install andrepolischuk/messg
 ```
 
@@ -13,7 +16,7 @@ $ component install andrepolischuk/messg
 
 ### messg(text[, type, delay])
 
-  Show message with specified `text` and `type`.
+  Create message with specified `text` and `type`.
   Аutohide timeout is specified via `delay` parameter.
 
   Possible types:
@@ -37,15 +40,7 @@ messg.warning('Connection is lost');
 messg.success('Task completed', 2500);
 ```
 
-### messg.set(key, value)
-
-  Setting options
-
-  * `speed` - show and hide speed (ms), default `250`
-  * `position` - messages position `top` or `bottom`, default `top`
-  * `flow` - disable messages flow if `false`
-
-### messg.button(name[, fn])
+### .button(name[, fn])
 
   Add buttons with handler
 
@@ -70,7 +65,7 @@ messg
 
   If buttons not specified, close message by clicking on it
 
-### messg.hide(fn)
+### .hide(fn)
 
   Add hide handler
 
@@ -81,6 +76,14 @@ messg
 
   });
 ```
+
+### messg.set(key, value)
+
+  Setting options
+
+  * `speed` - show and hide speed (ms), default `250`
+  * `position` - messages position `top` or `bottom`, default `top`
+  * `flow` - disable messages flow if `false`
 
 ## License
 
