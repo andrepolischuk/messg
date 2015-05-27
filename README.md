@@ -8,7 +8,7 @@
 $ npm install --save messg
 ```
 
-```js
+```sh
 $ component install andrepolischuk/messg
 ```
 
