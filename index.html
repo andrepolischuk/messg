@@ -11,40 +11,61 @@
   <![endif]-->
 </head>
 <body>
-  <div class="container">
-    <div class="page-header">
-      <h2>
-        Messg
-        <small><a href="https://github.com/andrepolischuk/messg">Github</a></small>
-      </h2>
-    </div>
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12">
-        <div class="row">
-          <div class="col-sm-2 text-center col-sm-offset-1">
-            <p><button class="btn btn-default" type="button">Default</button></p>
-            <p>Plain</p>
-          </div>
-          <div class="col-sm-2 text-center">
-            <p><button class="btn btn-success" type="button">Success</button></p>
-            <p>With delay</p>
-          </div>
-          <div class="col-sm-2 text-center">
-            <p><button class="btn btn-info" type="button">Info</button></p>
-            <p>With close button</p>
-          </div>
-          <div class="col-sm-2 text-center">
-            <p><button class="btn btn-warning" type="button">Warning</button></p>
-            <p>With action buttons</p>
-          </div>
-          <div class="col-sm-2 text-center">
-            <p><button class="btn btn-danger" type="button">Error</button></p>
-            <p>With OK button</p>
-          </div>
-        </div>
-      </div>
+  <div class="jumbotron">
+    <div class="container">
+      <h1>
+        messg
+      </h1>
+      <p>
+        Messages via CSS3 animations
+      </p>
+      <p class="text-muted">
+        1.3.0
+        &middot;
+        <a href="https://github.com/andrepolischuk/messg">GitHub</a>
+      </p>
     </div>
   </div>
+
+  <div class="container">
+    <h2 class="page-header">Types</h2>
+    <p>
+      Create message with specified <code>type</code>
+    </p>
+    <p>
+      <button class="btn btn-default" type="button">.default</button>
+      <button class="btn btn-success" type="button">.success</button>
+      <button class="btn btn-info" type="button">.info</button>
+      <button class="btn btn-warning" type="button">.warning</button>
+      <button class="btn btn-danger" type="button">.error</button>
+    </p>
+
+    <h2 class="page-header">Delay</h2>
+    <p>
+      Create message with <code>delay</code>
+    </p>
+    <p>
+      <button class="btn btn-success btn-delay" type="button">.success</button>
+    </p>
+
+    <h2 class="page-header">Buttons</h2>
+    <p>
+      Create message with close buttons
+    </p>
+    <p>
+      <button class="btn btn-info btn-x" type="button">.info</button>
+      <button class="btn btn-danger btn-ok" type="button">.error</button>
+    </p>
+
+    <h2 class="page-header">Actions</h2>
+    <p>
+      Create message with action buttons
+    </p>
+    <p>
+      <button class="btn btn-warning btn-yes-no" type="button">.warning</button>
+    </p>
+  </div>
+
   <script src="build/index.js"></script>
 </body>
 </html>

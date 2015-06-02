@@ -1,123 +1,4 @@
-(function outer(modules, cache, entries){
-
-  /**
-   * Global
-   */
-
-  var global = (function(){ return this; })();
-
-  /**
-   * Require `name`.
-   *
-   * @param {String} name
-   * @param {Boolean} jumped
-   * @api public
-   */
-
-  function require(name, jumped){
-    if (cache[name]) return cache[name].exports;
-    if (modules[name]) return call(name, require);
-    throw new Error('cannot find module "' + name + '"');
-  }
-
-  /**
-   * Call module `id` and cache it.
-   *
-   * @param {Number} id
-   * @param {Function} require
-   * @return {Function}
-   * @api private
-   */
-
-  function call(id, require){
-    var m = { exports: {} };
-    var mod = modules[id];
-    var name = mod[2];
-    var fn = mod[0];
-
-    fn.call(m.exports, function(req){
-      var dep = modules[id][1][req];
-      return require(dep || req);
-    }, m, m.exports, outer, modules, cache, entries);
-
-    // store to cache after successful resolve
-    cache[id] = m;
-
-    // expose as `name`.
-    if (name) cache[name] = cache[id];
-
-    return cache[id].exports;
-  }
-
-  /**
-   * Require all entries exposing them on global if needed.
-   */
-
-  for (var id in entries) {
-    if (entries[id]) {
-      global[entries[id]] = require(id);
-    } else {
-      require(id);
-    }
-  }
-
-  /**
-   * Duo flag.
-   */
-
-  require.duo = true;
-
-  /**
-   * Expose cache.
-   */
-
-  require.cache = cache;
-
-  /**
-   * Expose modules
-   */
-
-  require.modules = modules;
-
-  /**
-   * Return newest require.
-   */
-
-   return require;
-})({
-1: [function(require, module, exports) {
-
-'use strict';
-
-var events = require('component/event');
-var messg = require('andrepolischuk/messg@1.2.1');
-
-events.bind(document.querySelector('.btn-default'), 'click', function(e) {
-  messg('Close this by click');
-}, false);
-
-events.bind(document.querySelector('.btn-success'), 'click', function(e) {
-  messg.success('Task completed', 3000);
-}, false);
-
-events.bind(document.querySelector('.btn-info'), 'click', function(e) {
-  messg.info('You can try other').button('x');
-}, false);
-
-events.bind(document.querySelector('.btn-warning'), 'click', function(e) {
-  messg.warning('Are you sure?').button('Yes', function() {
-    alert('Yes');
-  }).button('No', function() {
-    alert('No');
-  });
-}, false);
-
-events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
-  messg.error('Connection is lost').button('OK');
-}, false);
-
-}, {"component/event":2,"andrepolischuk/messg@1.2.1":3}],
-2: [function(require, module, exports) {
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -153,8 +34,7 @@ exports.unbind = function(el, type, fn, capture){
   el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-}, {}],
-3: [function(require, module, exports) {
+},{}],2:[function(require,module,exports){
 
 'use strict';
 
@@ -436,8 +316,7 @@ function reposition() {
   });
 }
 
-}, {"event":2,"component-event":2,"ea":4,"uniquid":5}],
-4: [function(require, module, exports) {
+},{"component-event":1,"ea":3,"event":1,"uniquid":5}],3:[function(require,module,exports){
 
 'use strict';
 
@@ -465,6 +344,7 @@ module.exports = each;
 
 /**
  * Expose reverse iterate
+ *
  * @param {Object|Array} obj
  * @param {Function} fn
  * @return {Function}
@@ -477,6 +357,7 @@ module.exports.reverse = function(obj, fn) {
 
 /**
  * Iteration router
+ *
  * @param {Object|Array} obj
  * @param {Function} fn
  * @return {Function}
@@ -501,6 +382,7 @@ function each(obj, fn, direction) {
 
 /**
  * Iterate array
+ *
  * @param {Array} obj
  * @param {Function} fn
  * @api private
@@ -514,19 +396,21 @@ function array(obj, fn) {
 
 /**
  * Iterate array in reverse order
+ *
  * @param {Array} obj
  * @param {Function} fn
  * @api private
  */
 
 array.reverse = function(obj, fn) {
-  for (var i = obj.length - 1; i >= 0 ; i--) {
+  for (var i = obj.length - 1; i >= 0; i--) {
     fn(obj[i], i);
   }
 };
 
 /**
  * Iterate object
+ *
  * @param {Object} obj
  * @param {Function} fn
  * @api private
@@ -542,6 +426,7 @@ function object(obj, fn) {
 
 /**
  * Iterate object in reverse order
+ *
  * @param {Object} obj
  * @param {Function} fn
  * @api private
@@ -561,6 +446,7 @@ object.reverse = function(obj, fn) {
 
 /**
  * Iterate string
+ *
  * @param {Array} obj
  * @param {Function} fn
  * @api private
@@ -574,19 +460,19 @@ function string(obj, fn) {
 
 /**
  * Iterate string in reverse order
+ *
  * @param {Array} obj
  * @param {Function} fn
  * @api private
  */
 
 string.reverse = function(obj, fn) {
-  for (var i = obj.length - 1; i >= 0 ; i--) {
+  for (var i = obj.length - 1; i >= 0; i--) {
     fn(obj.charAt(i), i);
   }
 };
 
-}, {"type":6,"component-type":6}],
-6: [function(require, module, exports) {
+},{"component-type":4,"type":4}],4:[function(require,module,exports){
 /**
  * toString ref.
  */
@@ -622,30 +508,75 @@ module.exports = function(val){
   return typeof val;
 };
 
-}, {}],
-5: [function(require, module, exports) {
+},{}],5:[function(require,module,exports){
 
 'use strict';
 
 /**
  * Generate unique ID
+ *
  * @param  {String} prefix
  * @return {String}
  * @api public
  */
 
 module.exports = function(prefix) {
-
-  var uid = parseInt([
-    (new Date()).valueOf(),
-    (Math.random() * 1000000).toFixed()
-  ].join('')).toString(36);
-
-  return [
-    prefix || '',
-    uid
-  ].join('');
-
+  var uid = parseInt((new Date()).valueOf() +
+    (Math.random() * 1000000).toFixed()).toString(36);
+  return (prefix || '') + uid;
 };
 
-}, {}]}, {}, {"1":""})
+},{}],6:[function(require,module,exports){
+
+'use strict';
+
+var events = require('component-event');
+var messg = require('messg');
+
+events.bind(document.querySelector('.btn-default'), 'click', function(e) {
+  messg('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-success'), 'click', function(e) {
+  messg.success('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-info'), 'click', function(e) {
+  messg.info('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-warning'), 'click', function(e) {
+  messg.warning('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
+  messg.error('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-delay'), 'click', function(e) {
+  messg.success('Task completed', 3000);
+}, false);
+
+events.bind(document.querySelector('.btn-x'), 'click', function(e) {
+  messg
+    .info('You can try other')
+    .button('x');
+}, false);
+
+events.bind(document.querySelector('.btn-ok'), 'click', function(e) {
+  messg
+    .error('Connection is lost')
+    .button('OK');
+}, false);
+
+events.bind(document.querySelector('.btn-yes-no'), 'click', function(e) {
+  messg
+    .warning('Are you sure?')
+    .button('Yes', function() {
+      alert('Yes');
+    }).button('No', function() {
+      alert('No');
+    });
+}, false);
+
+},{"component-event":1,"messg":2}]},{},[6]);
