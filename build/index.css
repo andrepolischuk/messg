@@ -5198,6 +5198,15 @@ body {
 }
 .jumbotron {
   background-color: #fff;
+  text-align: center;
+}
+.page-header:first-child {
+  margin-top: 0;
+}
+@media (min-width: 768px) {
+  .jumbotron {
+    text-align: left;
+  }
 }
 .messg {
   position: fixed;
@@ -5241,7 +5250,7 @@ body {
 }
 
 .messg-default {
-  background-color: #212121;
+  background-color: #323232;
 }
 
 .messg-success {
@@ -5290,7 +5299,7 @@ body {
 }
 
 .messg-default button {
-  background-color: #1a1a1a;
+  background-color: #212121;
 }
 
 .messg-default button:hover {
@@ -5298,33 +5307,33 @@ body {
 }
 
 .messg-success button {
-  background-color: #48a64c;
+  background-color: #43a047;
 }
 
 .messg-success button:hover {
-  background-color: #449e48;
+  background-color: #388e3c;
 }
 
 .messg-info button {
-  background-color: #00b3c9;
+  background-color: #00acc1;
 }
 
 .messg-info button:hover {
-  background-color: #00a9bf;
+  background-color: #0097a7;
 }
 
 .messg-warning button {
-  background-color: #f29000;
+  background-color: #fb8c00;
 }
 
 .messg-warning button:hover {
-  background-color: #e68900;
+  background-color: #f57c00;
 }
 
 .messg-error button {
-  background-color: #f33628;
+  background-color: #e53935;
 }
 
 .messg-error button:hover {
-  background-color: #f2291a;
+  background-color: #d32f2f;
 }
