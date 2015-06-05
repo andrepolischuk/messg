@@ -2,7 +2,7 @@
 
   > Messages via CSS3 animations
 
-## Instalation
+## Install
 
 ```sh
 npm install --save messg
