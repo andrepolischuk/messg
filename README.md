@@ -5,11 +5,11 @@
 ## Instalation
 
 ```sh
-$ npm install --save messg
+npm install --save messg
 ```
 
 ```sh
-$ component install andrepolischuk/messg
+component install andrepolischuk/messg
 ```
 
 ## API
