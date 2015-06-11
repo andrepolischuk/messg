@@ -30,7 +30,7 @@ var types = [
  * Body ref
  */
 
-var body = document.getElementsByTagName('body')[0];
+var body;
 
 /**
  * Prefix
@@ -162,6 +162,8 @@ function Message(text, type, delay) {
   this.buttons = this.element.children[0];
   this.content = this.element.children[1];
   this.content.innerHTML = this.text;
+
+  if (!body) body = document.getElementsByTagName('body')[0];
   body.appendChild(this.element);
 
   if (!Message.flow) {
