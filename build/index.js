@@ -1,4 +1,57 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+
+'use strict';
+
+var events = require('component-event');
+var messg = require('messg');
+
+events.bind(document.querySelector('.btn-default'), 'click', function(e) {
+  messg('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-success'), 'click', function(e) {
+  messg.success('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-info'), 'click', function(e) {
+  messg.info('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-warning'), 'click', function(e) {
+  messg.warning('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
+  messg.error('Close this by click');
+}, false);
+
+events.bind(document.querySelector('.btn-delay'), 'click', function(e) {
+  messg.success('Task completed', 3000);
+}, false);
+
+events.bind(document.querySelector('.btn-x'), 'click', function(e) {
+  messg
+    .info('You can try other')
+    .button('x');
+}, false);
+
+events.bind(document.querySelector('.btn-ok'), 'click', function(e) {
+  messg
+    .error('Connection is lost')
+    .button('OK');
+}, false);
+
+events.bind(document.querySelector('.btn-yes-no'), 'click', function(e) {
+  messg
+    .warning('Are you sure?')
+    .button('Yes', function() {
+      messg.info('Yes', 5000);
+    }).button('No', function() {
+      messg.info('No', 5000);
+    });
+}, false);
+
+},{"component-event":2,"messg":3}],2:[function(require,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -34,7 +87,7 @@ exports.unbind = function(el, type, fn, capture){
   el[unbind](prefix + type, fn, capture || false);
   return fn;
 };
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 
 'use strict';
 
@@ -67,7 +120,7 @@ var types = [
  * Body ref
  */
 
-var body = document.getElementsByTagName('body')[0];
+var body;
 
 /**
  * Prefix
@@ -199,6 +252,8 @@ function Message(text, type, delay) {
   this.buttons = this.element.children[0];
   this.content = this.element.children[1];
   this.content.innerHTML = this.text;
+
+  if (!body) body = document.getElementsByTagName('body')[0];
   body.appendChild(this.element);
 
   if (!Message.flow) {
@@ -316,7 +371,7 @@ function reposition() {
   });
 }
 
-},{"component-event":1,"ea":3,"event":1,"uniquid":5}],3:[function(require,module,exports){
+},{"component-event":2,"ea":4,"event":2,"uniquid":6}],4:[function(require,module,exports){
 
 'use strict';
 
@@ -472,7 +527,7 @@ string.reverse = function(obj, fn) {
   }
 };
 
-},{"component-type":4,"type":4}],4:[function(require,module,exports){
+},{"component-type":5,"type":5}],5:[function(require,module,exports){
 /**
  * toString ref.
  */
@@ -508,7 +563,7 @@ module.exports = function(val){
   return typeof val;
 };
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 'use strict';
 
@@ -526,57 +581,4 @@ module.exports = function(prefix) {
   return (prefix || '') + uid;
 };
 
-},{}],6:[function(require,module,exports){
-
-'use strict';
-
-var events = require('component-event');
-var messg = require('messg');
-
-events.bind(document.querySelector('.btn-default'), 'click', function(e) {
-  messg('Close this by click');
-}, false);
-
-events.bind(document.querySelector('.btn-success'), 'click', function(e) {
-  messg.success('Close this by click');
-}, false);
-
-events.bind(document.querySelector('.btn-info'), 'click', function(e) {
-  messg.info('Close this by click');
-}, false);
-
-events.bind(document.querySelector('.btn-warning'), 'click', function(e) {
-  messg.warning('Close this by click');
-}, false);
-
-events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
-  messg.error('Close this by click');
-}, false);
-
-events.bind(document.querySelector('.btn-delay'), 'click', function(e) {
-  messg.success('Task completed', 3000);
-}, false);
-
-events.bind(document.querySelector('.btn-x'), 'click', function(e) {
-  messg
-    .info('You can try other')
-    .button('x');
-}, false);
-
-events.bind(document.querySelector('.btn-ok'), 'click', function(e) {
-  messg
-    .error('Connection is lost')
-    .button('OK');
-}, false);
-
-events.bind(document.querySelector('.btn-yes-no'), 'click', function(e) {
-  messg
-    .warning('Are you sure?')
-    .button('Yes', function() {
-      alert('Yes');
-    }).button('No', function() {
-      alert('No');
-    });
-}, false);
-
-},{"component-event":1,"messg":2}]},{},[6]);
+},{}]},{},[1]);

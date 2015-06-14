@@ -44,8 +44,8 @@ events.bind(document.querySelector('.btn-yes-no'), 'click', function(e) {
   messg
     .warning('Are you sure?')
     .button('Yes', function() {
-      alert('Yes');
+      messg.info('Yes', 5000);
     }).button('No', function() {
-      alert('No');
+      messg.info('No', 5000);
     });
 }, false);
