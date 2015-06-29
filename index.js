@@ -60,20 +60,6 @@ var flow = {};
 var margin = 10;
 
 /**
- * Opacity
- */
-
-var opacity0 = '0.0';
-var opacity1 = '1.0';
-
-/**
- * Display
- */
-
-var display0 = 'none';
-var display1 = 'block';
-
-/**
  * Expose message calling
  */
 
@@ -152,16 +138,14 @@ function Message(text, type, delay) {
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
-  this.element.style.display = display0;
-  this.element.style.opacity = opacity0;
+  this.element.style.display = 'none';
+  this.element.style.opacity = '0.0';
   this.element.style.transition = 'all ' +
     Message.speed / 1000 + 's ease-in-out';
   this.element.className += ' ' + prefix + '-' + this.type;
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
-  this.buttons = this.element.children[0];
-  this.content = this.element.children[1];
-  this.content.innerHTML = this.text;
+  this.element.children[1].innerHTML = this.text;
 
   if (!body) body = document.getElementsByTagName('body')[0];
   body.appendChild(this.element);
@@ -195,13 +179,13 @@ function Message(text, type, delay) {
 
 Message.prototype.show = function() {
   this.exist = true;
-  this.element.style.display = display1;
+  this.element.style.display = 'block';
   reposition();
 
   var self = this;
 
   setTimeout(function() {
-    self.element.style.opacity = opacity1;
+    self.element.style.opacity = '1.0';
   }, 50);
 
   if (this.delay) {
@@ -226,14 +210,14 @@ Message.prototype.hide = function(fn) {
   }
 
   this.exist = false;
-  this.element.style.opacity = opacity0;
+  this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
   reposition();
 
   var self = this;
 
   setTimeout(function() {
-    self.element.style.display = display0;
+    self.element.style.display = 'none';
     body.removeChild(self.element);
     delete flow[self.id];
   }, Message.speed);
@@ -251,7 +235,7 @@ Message.prototype.hide = function(fn) {
 Message.prototype.button = function(name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
-  this.buttons.appendChild(button);
+  this.element.children[0].appendChild(button);
   reposition();
 
   var self = this;
