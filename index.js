@@ -1,9 +1,4 @@
-
 'use strict';
-
-/**
- * Module dependencies
- */
 
 try {
   var events = require('event');
@@ -13,10 +8,15 @@ try {
 
 var each = require('ea');
 var uniquid = require('uniquid');
+var body;
+var flow = {};
+var margin = 10;
+var prefix = 'messg';
 
-/**
- * Object types
- */
+var template = '<div class="' + prefix + '">' +
+    '<div class="' + prefix + '-buttons"></div>' +
+    '<div class="' + prefix + '-text"></div>' +
+  '</div>';
 
 var types = [
   'default',
@@ -26,70 +26,11 @@ var types = [
   'error'
 ];
 
-/**
- * Body ref
- */
-
-var body;
-
-/**
- * Prefix
- */
-
-var prefix = 'messg';
-
-/**
- * Template
- */
-
-var template = '<div class="' + prefix + '">' +
-    '<div class="' + prefix + '-buttons"></div>' +
-    '<div class="' + prefix + '-text"></div>' +
-  '</div>';
-
-/**
- * Messages flow
- */
-
-var flow = {};
-
-/**
- * Margin
- */
-
-var margin = 10;
-
-/**
- * Expose message calling
- */
-
 module.exports = Message;
 
-/**
- * Transition speed
- */
-
 Message.speed = 250;
-
-/**
- * Position
- */
-
 Message.position = 'top';
-
-/**
- * Add to flow
- */
-
 Message.flow = true;
-
-/**
- * Expose set options
- *
- * @param {String|Object} key
- * @param {Mixed} value
- * @api public
- */
 
 module.exports.set = function(key, value) {
   if (typeof key === 'object') {
@@ -101,14 +42,6 @@ module.exports.set = function(key, value) {
   }
 };
 
-/**
- * Expose message calling via type
- *
- * @param {String} text
- * @param {Number} delay
- * @api public
- */
-
 each(types, function(type) {
   module.exports[type] = function(text, delay) {
     if (!text) return;
@@ -116,25 +49,14 @@ each(types, function(type) {
   };
 });
 
-/**
- * Message
- *
- * @param {String} text
- * @param {String} type
- * @param {Number} delay
- * @api public
- */
-
 function Message(text, type, delay) {
   if (!text) return;
   if (!(this instanceof Message)) return new Message(text, type, delay);
-
   this.id = uniquid(prefix);
   this.delay = typeof type === 'number' ? type : delay;
   this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
   this.exist = false;
-
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
@@ -146,7 +68,6 @@ function Message(text, type, delay) {
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
-
   if (!body) body = document.getElementsByTagName('body')[0];
   body.appendChild(this.element);
 
@@ -158,7 +79,6 @@ function Message(text, type, delay) {
 
   flow[this.id] = this;
   this.show();
-
   var self = this;
 
   setTimeout(function() {
@@ -170,18 +90,10 @@ function Message(text, type, delay) {
   }, Message.speed);
 }
 
-/**
- * Show message
- *
- * @return {Object}
- * @api public
- */
-
 Message.prototype.show = function() {
   this.exist = true;
   this.element.style.display = 'block';
   reposition();
-
   var self = this;
 
   setTimeout(function() {
@@ -197,12 +109,6 @@ Message.prototype.show = function() {
   return this;
 };
 
-/**
- * Hide message
- *
- * @api public
- */
-
 Message.prototype.hide = function(fn) {
   if (typeof fn === 'function') {
     this.fn = fn;
@@ -213,7 +119,6 @@ Message.prototype.hide = function(fn) {
   this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
   reposition();
-
   var self = this;
 
   setTimeout(function() {
@@ -223,21 +128,11 @@ Message.prototype.hide = function(fn) {
   }, Message.speed);
 };
 
-/**
- * Add button
- *
- * @param  {String}   name
- * @param  {Function} fn
- * @return {Object}
- * @api public
- */
-
 Message.prototype.button = function(name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
   this.element.children[0].appendChild(button);
   reposition();
-
   var self = this;
 
   events.bind(button, 'click', function() {
@@ -247,12 +142,6 @@ Message.prototype.button = function(name, fn) {
 
   return this;
 };
-
-/**
- * Flow reposition
- *
- * @api private
- */
 
 function reposition() {
   var pos = margin;
