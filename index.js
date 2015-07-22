@@ -7,6 +7,7 @@ try {
 }
 
 var each = require('ea');
+var eachReverse = require('each-reverse');
 var uniquid = require('uniquid');
 var body;
 var flow = {};
@@ -146,7 +147,7 @@ Message.prototype.button = function(name, fn) {
 function reposition() {
   var pos = margin;
 
-  each.reverse(flow, function(message) {
+  eachReverse(flow, function(message) {
     if (message.exist) {
       message.element.style[Message.position] = pos + 'px';
       pos += message.element.offsetHeight + margin;
