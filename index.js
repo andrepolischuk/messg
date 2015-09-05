@@ -1,51 +1,56 @@
+import messg from 'messg';
+const btnDefault = document.querySelector('.btn-default');
+const btnSuccess = document.querySelector('.btn-success');
+const btnInfo = document.querySelector('.btn-info');
+const btnWarning = document.querySelector('.btn-warning');
+const btnDanger = document.querySelector('.btn-danger');
+const btnDelay = document.querySelector('.btn-delay');
+const btnX = document.querySelector('.btn-x');
+const btnOk = document.querySelector('.btn-ok');
+const btnYesNo = document.querySelector('.btn-yes-no');
 
-'use strict';
-
-var events = require('component-event');
-var messg = require('messg');
-
-events.bind(document.querySelector('.btn-default'), 'click', function(e) {
+btnDefault.addEventListener('click', () => {
   messg('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-success'), 'click', function(e) {
+btnSuccess.addEventListener('click', () => {
   messg.success('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-info'), 'click', function(e) {
+btnInfo.addEventListener('click', () => {
   messg.info('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-warning'), 'click', function(e) {
+btnWarning.addEventListener('click', () => {
   messg.warning('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
+btnDanger.addEventListener('click', () => {
   messg.error('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-delay'), 'click', function(e) {
+btnDelay.addEventListener('click', () => {
   messg.success('Task completed', 3000);
 }, false);
 
-events.bind(document.querySelector('.btn-x'), 'click', function(e) {
+btnX.addEventListener('click', () => {
   messg
     .info('You can try other')
     .button('x');
 }, false);
 
-events.bind(document.querySelector('.btn-ok'), 'click', function(e) {
+btnOk.addEventListener('click', () => {
   messg
     .error('Connection is lost')
     .button('OK');
 }, false);
 
-events.bind(document.querySelector('.btn-yes-no'), 'click', function(e) {
+btnYesNo.addEventListener('click', () => {
   messg
     .warning('Are you sure?')
-    .button('Yes', function() {
-      messg.info('Yes', 5000);
-    }).button('No', function() {
-      messg.info('No', 5000);
+    .button('Yes', () => {
+      messg.warning('You say "Yes"', 5000);
+    }).button('No', () => {
+      messg.warning('You say "No"', 5000);
     });
 }, false);

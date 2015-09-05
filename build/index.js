@@ -1,57 +1,63 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-
 'use strict';
 
-var events = require('component-event');
-var messg = require('messg');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-events.bind(document.querySelector('.btn-default'), 'click', function(e) {
-  messg('Close this by click');
+var _messg = require('messg');
+
+var _messg2 = _interopRequireDefault(_messg);
+
+var btnDefault = document.querySelector('.btn-default');
+var btnSuccess = document.querySelector('.btn-success');
+var btnInfo = document.querySelector('.btn-info');
+var btnWarning = document.querySelector('.btn-warning');
+var btnDanger = document.querySelector('.btn-danger');
+var btnDelay = document.querySelector('.btn-delay');
+var btnX = document.querySelector('.btn-x');
+var btnOk = document.querySelector('.btn-ok');
+var btnYesNo = document.querySelector('.btn-yes-no');
+
+btnDefault.addEventListener('click', function () {
+  (0, _messg2['default'])('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-success'), 'click', function(e) {
-  messg.success('Close this by click');
+btnSuccess.addEventListener('click', function () {
+  _messg2['default'].success('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-info'), 'click', function(e) {
-  messg.info('Close this by click');
+btnInfo.addEventListener('click', function () {
+  _messg2['default'].info('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-warning'), 'click', function(e) {
-  messg.warning('Close this by click');
+btnWarning.addEventListener('click', function () {
+  _messg2['default'].warning('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-danger'), 'click', function(e) {
-  messg.error('Close this by click');
+btnDanger.addEventListener('click', function () {
+  _messg2['default'].error('Close this by click');
 }, false);
 
-events.bind(document.querySelector('.btn-delay'), 'click', function(e) {
-  messg.success('Task completed', 3000);
+btnDelay.addEventListener('click', function () {
+  _messg2['default'].success('Task completed', 3000);
 }, false);
 
-events.bind(document.querySelector('.btn-x'), 'click', function(e) {
-  messg
-    .info('You can try other')
-    .button('x');
+btnX.addEventListener('click', function () {
+  _messg2['default'].info('You can try other').button('x');
 }, false);
 
-events.bind(document.querySelector('.btn-ok'), 'click', function(e) {
-  messg
-    .error('Connection is lost')
-    .button('OK');
+btnOk.addEventListener('click', function () {
+  _messg2['default'].error('Connection is lost').button('OK');
 }, false);
 
-events.bind(document.querySelector('.btn-yes-no'), 'click', function(e) {
-  messg
-    .warning('Are you sure?')
-    .button('Yes', function() {
-      messg.info('Yes', 5000);
-    }).button('No', function() {
-      messg.info('No', 5000);
-    });
+btnYesNo.addEventListener('click', function () {
+  _messg2['default'].warning('Are you sure?').button('Yes', function () {
+    _messg2['default'].warning('You say "Yes"', 5000);
+  }).button('No', function () {
+    _messg2['default'].warning('You say "No"', 5000);
+  });
 }, false);
 
-},{"component-event":2,"messg":3}],2:[function(require,module,exports){
+},{"messg":3}],2:[function(require,module,exports){
 var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
     unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
     prefix = bind !== 'addEventListener' ? 'on' : '';
@@ -88,12 +94,7 @@ exports.unbind = function(el, type, fn, capture){
   return fn;
 };
 },{}],3:[function(require,module,exports){
-
 'use strict';
-
-/**
- * Module dependencies
- */
 
 try {
   var events = require('event');
@@ -102,11 +103,17 @@ try {
 }
 
 var each = require('ea');
+var eachReverse = require('each-reverse');
 var uniquid = require('uniquid');
+var body;
+var flow = {};
+var margin = 10;
+var prefix = 'messg';
 
-/**
- * Object types
- */
+var template = '<div class="' + prefix + '">' +
+    '<div class="' + prefix + '-buttons"></div>' +
+    '<div class="' + prefix + '-text"></div>' +
+  '</div>';
 
 var types = [
   'default',
@@ -116,84 +123,11 @@ var types = [
   'error'
 ];
 
-/**
- * Body ref
- */
-
-var body;
-
-/**
- * Prefix
- */
-
-var prefix = 'messg';
-
-/**
- * Template
- */
-
-var template = '<div class="' + prefix + '">' +
-    '<div class="' + prefix + '-buttons"></div>' +
-    '<div class="' + prefix + '-text"></div>' +
-  '</div>';
-
-/**
- * Messages flow
- */
-
-var flow = {};
-
-/**
- * Margin
- */
-
-var margin = 10;
-
-/**
- * Opacity
- */
-
-var opacity0 = '0.0';
-var opacity1 = '1.0';
-
-/**
- * Display
- */
-
-var display0 = 'none';
-var display1 = 'block';
-
-/**
- * Expose message calling
- */
-
 module.exports = Message;
 
-/**
- * Transition speed
- */
-
 Message.speed = 250;
-
-/**
- * Position
- */
-
 Message.position = 'top';
-
-/**
- * Add to flow
- */
-
 Message.flow = true;
-
-/**
- * Expose set options
- *
- * @param {String|Object} key
- * @param {Mixed} value
- * @api public
- */
 
 module.exports.set = function(key, value) {
   if (typeof key === 'object') {
@@ -205,14 +139,6 @@ module.exports.set = function(key, value) {
   }
 };
 
-/**
- * Expose message calling via type
- *
- * @param {String} text
- * @param {Number} delay
- * @api public
- */
-
 each(types, function(type) {
   module.exports[type] = function(text, delay) {
     if (!text) return;
@@ -220,39 +146,25 @@ each(types, function(type) {
   };
 });
 
-/**
- * Message
- *
- * @param {String} text
- * @param {String} type
- * @param {Number} delay
- * @api public
- */
-
 function Message(text, type, delay) {
   if (!text) return;
   if (!(this instanceof Message)) return new Message(text, type, delay);
-
   this.id = uniquid(prefix);
   this.delay = typeof type === 'number' ? type : delay;
   this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
   this.exist = false;
-
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
-  this.element.style.display = display0;
-  this.element.style.opacity = opacity0;
+  this.element.style.display = 'none';
+  this.element.style.opacity = '0.0';
   this.element.style.transition = 'all ' +
     Message.speed / 1000 + 's ease-in-out';
   this.element.className += ' ' + prefix + '-' + this.type;
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
-  this.buttons = this.element.children[0];
-  this.content = this.element.children[1];
-  this.content.innerHTML = this.text;
-
+  this.element.children[1].innerHTML = this.text;
   if (!body) body = document.getElementsByTagName('body')[0];
   body.appendChild(this.element);
 
@@ -264,7 +176,6 @@ function Message(text, type, delay) {
 
   flow[this.id] = this;
   this.show();
-
   var self = this;
 
   setTimeout(function() {
@@ -276,22 +187,14 @@ function Message(text, type, delay) {
   }, Message.speed);
 }
 
-/**
- * Show message
- *
- * @return {Object}
- * @api public
- */
-
 Message.prototype.show = function() {
   this.exist = true;
-  this.element.style.display = display1;
+  this.element.style.display = 'block';
   reposition();
-
   var self = this;
 
   setTimeout(function() {
-    self.element.style.opacity = opacity1;
+    self.element.style.opacity = '1.0';
   }, 50);
 
   if (this.delay) {
@@ -303,12 +206,6 @@ Message.prototype.show = function() {
   return this;
 };
 
-/**
- * Hide message
- *
- * @api public
- */
-
 Message.prototype.hide = function(fn) {
   if (typeof fn === 'function') {
     this.fn = fn;
@@ -316,34 +213,23 @@ Message.prototype.hide = function(fn) {
   }
 
   this.exist = false;
-  this.element.style.opacity = opacity0;
+  this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
   reposition();
-
   var self = this;
 
   setTimeout(function() {
-    self.element.style.display = display0;
+    self.element.style.display = 'none';
     body.removeChild(self.element);
     delete flow[self.id];
   }, Message.speed);
 };
 
-/**
- * Add button
- *
- * @param  {String}   name
- * @param  {Function} fn
- * @return {Object}
- * @api public
- */
-
 Message.prototype.button = function(name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
-  this.buttons.appendChild(button);
+  this.element.children[0].appendChild(button);
   reposition();
-
   var self = this;
 
   events.bind(button, 'click', function() {
@@ -354,16 +240,10 @@ Message.prototype.button = function(name, fn) {
   return this;
 };
 
-/**
- * Flow reposition
- *
- * @api private
- */
-
 function reposition() {
   var pos = margin;
 
-  each.reverse(flow, function(message) {
+  eachReverse(flow, function(message) {
     if (message.exist) {
       message.element.style[Message.position] = pos + 'px';
       pos += message.element.offsetHeight + margin;
@@ -371,13 +251,8 @@ function reposition() {
   });
 }
 
-},{"component-event":2,"ea":4,"event":2,"uniquid":6}],4:[function(require,module,exports){
-
+},{"component-event":2,"ea":4,"each-reverse":6,"event":2,"uniquid":8}],4:[function(require,module,exports){
 'use strict';
-
-/**
- * Module dependencies
- */
 
 try {
   var type = require('type');
@@ -385,147 +260,39 @@ try {
   var type = require('component-type');
 }
 
-/**
- * Has own property
- */
+module.exports = function(obj, fn) {
+  if (type(fn) !== 'function') return;
 
-var has = Object.prototype.hasOwnProperty;
-
-/**
- * Expose direct iterate
- */
-
-module.exports = each;
-
-/**
- * Expose reverse iterate
- *
- * @param {Object|Array} obj
- * @param {Function} fn
- * @return {Function}
- * @api public
- */
-
-module.exports.reverse = function(obj, fn) {
-  return each(obj, fn, 'reverse');
-};
-
-/**
- * Iteration router
- *
- * @param {Object|Array} obj
- * @param {Function} fn
- * @return {Function}
- * @api public
- */
-
-function each(obj, fn, direction) {
-  if (typeof fn === 'function') {
-    switch (type(obj)) {
-      case 'array':
-        return (array[direction] || array)(obj, fn);
-      case 'object':
-        if (type(obj.length) === 'number') {
-          return (array[direction] || array)(obj, fn);
-        }
-        return (object[direction] || object)(obj, fn);
-      case 'string':
-        return (string[direction] || string)(obj, fn);
-    }
+  switch (type(obj)) {
+    case 'array':
+      return array(obj, fn);
+    case 'object':
+      if (type(obj.length) === 'number') return array(obj, fn);
+      return object(obj, fn);
+    case 'string':
+      return string(obj, fn);
   }
-}
-
-/**
- * Iterate array
- *
- * @param {Array} obj
- * @param {Function} fn
- * @api private
- */
+};
 
 function array(obj, fn) {
-  for (var i = 0; i < obj.length; i++) {
+  for (var i = 0, len = obj.length; i < len; i++) {
     fn(obj[i], i);
   }
 }
-
-/**
- * Iterate array in reverse order
- *
- * @param {Array} obj
- * @param {Function} fn
- * @api private
- */
-
-array.reverse = function(obj, fn) {
-  for (var i = obj.length - 1; i >= 0; i--) {
-    fn(obj[i], i);
-  }
-};
-
-/**
- * Iterate object
- *
- * @param {Object} obj
- * @param {Function} fn
- * @api private
- */
 
 function object(obj, fn) {
   for (var i in obj) {
-    if (has.call(obj, i)) {
+    if (obj.hasOwnProperty(i)) {
       fn(obj[i], i);
     }
   }
 }
 
-/**
- * Iterate object in reverse order
- *
- * @param {Object} obj
- * @param {Function} fn
- * @api private
- */
-
-object.reverse = function(obj, fn) {
-  var keys = [];
-  for (var k in obj) {
-    if (has.call(obj, k)) {
-      keys.push(k);
-    }
-  }
-  for (var i = keys.length - 1; i >= 0; i--) {
-    fn(obj[keys[i]], keys[i]);
-  }
-};
-
-/**
- * Iterate string
- *
- * @param {Array} obj
- * @param {Function} fn
- * @api private
- */
-
 function string(obj, fn) {
-  for (var i = 0; i < obj.length; i++) {
+  for (var i = 0, len = obj.length; i < len; i++) {
     fn(obj.charAt(i), i);
   }
 }
-
-/**
- * Iterate string in reverse order
- *
- * @param {Array} obj
- * @param {Function} fn
- * @api private
- */
-
-string.reverse = function(obj, fn) {
-  for (var i = obj.length - 1; i >= 0; i--) {
-    fn(obj.charAt(i), i);
-  }
-};
 
 },{"component-type":5,"type":5}],5:[function(require,module,exports){
 /**
@@ -564,16 +331,58 @@ module.exports = function(val){
 };
 
 },{}],6:[function(require,module,exports){
-
 'use strict';
 
-/**
- * Generate unique ID
- *
- * @param  {String} prefix
- * @return {String}
- * @api public
- */
+try {
+  var type = require('type');
+} catch (err) {
+  var type = require('component-type');
+}
+
+module.exports = function(obj, fn) {
+  if (type(fn) !== 'function') return;
+
+  switch (type(obj)) {
+    case 'array':
+      return array(obj, fn);
+    case 'object':
+      if (type(obj.length) === 'number') return array(obj, fn);
+      return object(obj, fn);
+    case 'string':
+      return string(obj, fn);
+  }
+};
+
+function array(obj, fn) {
+  for (var i = obj.length - 1; i >= 0; i--) {
+    fn(obj[i], i);
+  }
+}
+
+function object(obj, fn) {
+  var keys = [];
+
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k)) {
+      keys.push(k);
+    }
+  }
+
+  for (var i = keys.length - 1; i >= 0; i--) {
+    fn(obj[keys[i]], keys[i]);
+  }
+}
+
+function string(obj, fn) {
+  for (var i = obj.length - 1; i >= 0; i--) {
+    fn(obj.charAt(i), i);
+  }
+}
+
+},{"component-type":7,"type":7}],7:[function(require,module,exports){
+arguments[4][5][0].apply(exports,arguments)
+},{"dup":5}],8:[function(require,module,exports){
+'use strict';
 
 module.exports = function(prefix) {
   var uid = parseInt((new Date()).valueOf() +
