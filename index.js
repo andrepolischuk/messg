@@ -83,7 +83,7 @@ function Message(text, type, delay) {
   var self = this;
 
   setTimeout(function() {
-    if (!self.buttons.children.length) {
+    if (!self.element.children[0].children.length) {
       events.bind(self.element, 'click', function() {
         self.hide();
       });
