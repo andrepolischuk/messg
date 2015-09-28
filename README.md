@@ -1,6 +1,6 @@
 # messg
 
-  > Messages via CSS3 animations
+> Messages via CSS3 animations
 
 ## Install
 
@@ -16,16 +16,16 @@ component install andrepolischuk/messg
 
 ### messg(text[, type, delay])
 
-  Create message with specified `text` and `type`.
-  Аutohide timeout is specified via `delay` parameter.
+Create message with specified `text` and `type`.
+Аutohide timeout is specified via `delay` parameter.
 
-  Possible types:
+Possible types:
 
-  * default
-  * success
-  * info
-  * warning
-  * error
+* default
+* success
+* info
+* warning
+* error
 
 ### messg.default(text[, delay])
 ### messg.success(text[, delay])
@@ -33,7 +33,7 @@ component install andrepolischuk/messg
 ### messg.warning(text[, delay])
 ### messg.error(text[, delay])
 
-  Aliases for `messg(text[, type, delay])`
+Aliases for `messg(text[, type, delay])`
 
 ```js
 messg.warning('Connection is lost');
@@ -42,7 +42,7 @@ messg.success('Task completed', 2500);
 
 ### .button(name[, fn])
 
-  Add buttons with handler
+Add buttons with handler
 
 ```js
 messg
@@ -55,7 +55,7 @@ messg
   });
 ```
 
-  Add simple close button
+Add simple close button
 
 ```js
 messg
@@ -63,11 +63,11 @@ messg
   .button('Ok');
 ```
 
-  If buttons not specified, close message by clicking on it
+If buttons not specified, close message by clicking on it
 
 ### .hide(fn)
 
-  Add hide handler
+Add hide handler
 
 ```js
 messg
@@ -79,12 +79,12 @@ messg
 
 ### messg.set(key, value)
 
-  Setting options
+Setting options
 
-  * `speed` - show and hide speed (ms), default `250`
-  * `position` - messages position `top` or `bottom`, default `top`
-  * `flow` - disable messages flow if `false`
+* `speed` - show and hide speed (ms), default `250`
+* `position` - messages position `top` or `bottom`, default `top`
+* `flow` - disable messages flow if `false`
 
 ## License
 
-  MIT
+MIT
