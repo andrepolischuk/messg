@@ -44,15 +44,15 @@ function Message(text, type, delay) {
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
-  this.element.style.display = 'none';
-  this.element.style.opacity = '0.0';
-  this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out 10ms';
   this.element.className += ' ' + prefix + '-' + this.type;
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
   if (!body) body = document.getElementsByTagName('body')[0];
   body.appendChild(this.element);
+  this.element.style.opacity = '0.0';
+  this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out';
+  this.element.offsetWidth;
 
   if (!Message.flow) {
     each(flow, function(message) {
@@ -68,7 +68,6 @@ function Message(text, type, delay) {
 
 Message.prototype.show = function() {
   this.exist = true;
-  this.element.style.display = 'block';
   this.element.style.opacity = '1.0';
   reposition();
   var self = this;
@@ -93,7 +92,6 @@ Message.prototype.hide = function(fn) {
   var self = this;
 
   setTimeout(function() {
-    self.element.style.display = 'none';
     body.removeChild(self.element);
     delete flow[self.id];
   }, Message.speed);
