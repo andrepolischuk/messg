@@ -33,16 +33,6 @@ Message.speed = 250;
 Message.position = 'top';
 Message.flow = true;
 
-module.exports.set = function(key, value) {
-  if (typeof key === 'object') {
-    each(key, function(val, k) {
-      Message[k] = val;
-    });
-  } else if (value) {
-    Message[key] = value;
-  }
-};
-
 each(types, function(type) {
   module.exports[type] = function(text, delay) {
     if (!text) return;
