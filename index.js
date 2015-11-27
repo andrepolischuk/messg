@@ -2,7 +2,6 @@
 var each = require('ea');
 var eachReverse = require('each-reverse');
 var uniquid = require('uniquid');
-var body;
 var flow = {};
 var margin = 10;
 var prefix = 'messg';
@@ -21,13 +20,12 @@ var types = [
 ];
 
 module.exports = Message;
-
 Message.speed = 250;
 Message.position = 'top';
 Message.flow = true;
 
-each(types, function(type) {
-  module.exports[type] = function(text, delay) {
+each(types, function (type) {
+  module.exports[type] = function (text, delay) {
     if (!text) return;
     return new Message(text, type, delay);
   };
@@ -48,14 +46,13 @@ function Message(text, type, delay) {
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
-  if (!body) body = document.getElementsByTagName('body')[0];
-  body.appendChild(this.element);
+  document.getElementsByTagName('body')[0].appendChild(this.element);
   this.element.style.opacity = '0.0';
   this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out';
   this.element.offsetWidth;
 
   if (!Message.flow) {
-    each(flow, function(message) {
+    each(flow, function (message) {
       message.hide();
     });
   }
@@ -66,10 +63,10 @@ function Message(text, type, delay) {
   this.element.addEventListener('click', this.hide, false);
 }
 
-Message.prototype.show = function() {
+Message.prototype.show = function () {
   this.exist = true;
   this.element.style.opacity = '1.0';
-  reposition();
+  Message.reposition();
   var self = this;
 
   if (this.delay) {
@@ -79,7 +76,7 @@ Message.prototype.show = function() {
   return this;
 };
 
-Message.prototype.hide = function(fn) {
+Message.prototype.hide = function (fn) {
   if (typeof fn === 'function') {
     this.fn = fn;
     return this;
@@ -88,24 +85,24 @@ Message.prototype.hide = function(fn) {
   this.exist = false;
   this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
-  reposition();
+  Message.reposition();
   var self = this;
 
-  setTimeout(function() {
-    body.removeChild(self.element);
+  setTimeout(function () {
+    document.getElementsByTagName('body')[0].removeChild(self.element);
     delete flow[self.id];
   }, Message.speed);
 };
 
-Message.prototype.button = function(name, fn) {
+Message.prototype.button = function (name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
   this.element.children[0].appendChild(button);
   this.element.removeEventListener('click', this.hide, false);
-  reposition();
+  Message.reposition();
   var self = this;
 
-  button.addEventListener('click', function() {
+  button.addEventListener('click', function () {
     if (typeof fn === 'function') fn(name.toLowerCase());
     self.hide();
   }, false);
@@ -113,13 +110,13 @@ Message.prototype.button = function(name, fn) {
   return this;
 };
 
-function reposition() {
+Message.reposition = function () {
   var pos = margin;
 
-  eachReverse(flow, function(message) {
+  eachReverse(flow, function (message) {
     if (message.exist) {
       message.element.style[Message.position] = pos + 'px';
       pos += message.element.offsetHeight + margin;
     }
   });
-}
+};
