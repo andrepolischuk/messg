@@ -1,5 +1,4 @@
 'use strict';
-var events = require('component-event');
 var each = require('ea');
 var eachReverse = require('each-reverse');
 var uniquid = require('uniquid');
@@ -67,9 +66,9 @@ function Message(text, type, delay) {
 
   setTimeout(function() {
     if (!self.element.children[0].children.length) {
-      events.bind(self.element, 'click', function() {
+      self.element.addEventListener('click', function() {
         self.hide();
-      });
+      }, false);
     }
   }, Message.speed);
 }
@@ -116,10 +115,10 @@ Message.prototype.button = function(name, fn) {
   reposition();
   var self = this;
 
-  events.bind(button, 'click', function() {
+  button.addEventListener('click', function() {
     if (typeof fn === 'function') fn(name.toLowerCase());
     self.hide();
-  });
+  }, false);
 
   return this;
 };
