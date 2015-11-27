@@ -62,15 +62,8 @@ function Message(text, type, delay) {
 
   flow[this.id] = this;
   this.show();
-  var self = this;
-
-  setTimeout(function() {
-    if (!self.element.children[0].children.length) {
-      self.element.addEventListener('click', function() {
-        self.hide();
-      }, false);
-    }
-  }, Message.speed);
+  this.hide = this.hide.bind(this);
+  this.element.addEventListener('click', this.hide, false);
 }
 
 Message.prototype.show = function() {
@@ -81,9 +74,7 @@ Message.prototype.show = function() {
   var self = this;
 
   if (this.delay) {
-    setTimeout(function() {
-      self.hide();
-    }, self.delay + Message.speed);
+    setTimeout(this.hide, this.delay + Message.speed);
   }
 
   return this;
@@ -112,6 +103,7 @@ Message.prototype.button = function(name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
   this.element.children[0].appendChild(button);
+  this.element.removeEventListener('click', this.hide, false);
   reposition();
   var self = this;
 
