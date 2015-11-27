@@ -63,7 +63,7 @@ function Message(text, type, delay) {
   this.element = this.element.children[0];
   this.element.style.display = 'none';
   this.element.style.opacity = '0.0';
-  this.element.style.transition = 'all ' + Message.speed / 1000 + 's ease-in-out 10ms';
+  this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out 10ms';
   this.element.className += ' ' + prefix + '-' + this.type;
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
