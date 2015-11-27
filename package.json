@@ -14,9 +14,6 @@
     "each-reverse": "^0.1.0",
     "uniquid": "^1.1.0"
   },
-  "browser": {
-    "event": "component-event"
-  },
   "main": "index.js",
   "style": "index.css",
   "author": "Andrey Polischuk <andre.polischuk@gmail.com>",

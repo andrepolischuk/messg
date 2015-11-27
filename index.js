@@ -1,11 +1,5 @@
 'use strict';
-
-try {
-  var events = require('event');
-} catch (err) {
-  var events = require('component-event');
-}
-
+var events = require('component-event');
 var each = require('ea');
 var eachReverse = require('each-reverse');
 var uniquid = require('uniquid');
