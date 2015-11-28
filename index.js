@@ -1,8 +1,7 @@
 'use strict';
 var each = require('ea');
 var eachReverse = require('each-reverse');
-var uniquid = require('uniquid');
-var flow = {};
+var flow = [];
 var margin = 10;
 var prefix = 'messg';
 
@@ -34,7 +33,6 @@ each(types, function (type) {
 function Message(text, type, delay) {
   if (!text) return;
   if (!(this instanceof Message)) return new Message(text, type, delay);
-  this.id = uniquid(prefix);
   this.delay = typeof type === 'number' ? type : delay;
   this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
@@ -46,18 +44,18 @@ function Message(text, type, delay) {
   this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
-  document.getElementsByTagName('body')[0].appendChild(this.element);
+  document.body.appendChild(this.element);
   this.element.style.opacity = '0.0';
   this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out';
   this.element.offsetWidth;
 
-  if (!Message.flow) {
-    each(flow, function (message) {
-      message.hide();
+  if (!Message.flow || Message.max) {
+    eachReverse(flow, function (message, i) {
+      if (!Message.max || i <= flow.length - Message.max) message.hide();
     });
   }
 
-  flow[this.id] = this;
+  flow.push(this);
   this.show();
   this.hide = this.hide.bind(this);
   this.element.addEventListener('click', this.hide, false);
@@ -89,8 +87,8 @@ Message.prototype.hide = function (fn) {
   var self = this;
 
   setTimeout(function () {
-    document.getElementsByTagName('body')[0].removeChild(self.element);
-    delete flow[self.id];
+    self.element.parentNode.removeChild(self.element);
+    flow.splice(flow.indexOf(self), 1);
   }, Message.speed);
 };
 

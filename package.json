@@ -10,8 +10,7 @@
   "repository": "andrepolischuk/messg",
   "dependencies": {
     "ea": "^0.5.0",
-    "each-reverse": "^0.1.0",
-    "uniquid": "^1.1.0"
+    "each-reverse": "^0.1.0"
   },
   "main": "index.js",
   "style": "index.css",
