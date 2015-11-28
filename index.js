@@ -56,9 +56,9 @@ function Message(text, type, delay) {
   }
 
   flow.push(this);
-  this.show();
   this.hide = this.hide.bind(this);
   this.element.addEventListener('click', this.hide, false);
+  this.show();
 }
 
 Message.prototype.show = function () {
