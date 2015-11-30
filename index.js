@@ -40,7 +40,6 @@ function Message(text, type, delay) {
   this.element.innerHTML = template;
   this.element = this.element.children[0];
   this.element.className += ' ' + prefix + '-' + this.type;
-  this.element.id = this.id;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
   document.body.appendChild(this.element);
@@ -108,5 +107,11 @@ Message.reposition = function () {
   eachReverse(flow, function (message) {
     message.element.style[Message.position] = pos + 'px';
     pos += message.element.offsetHeight + margin;
+  });
+};
+
+Message.clean = function () {
+  eachReverse(flow, function (message) {
+    message.hide();
   });
 };
