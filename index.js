@@ -6,8 +6,8 @@ var margin = 10;
 var prefix = 'messg';
 
 var template = '<div class="' + prefix + '">' +
-    '<div class="' + prefix + '-buttons"></div>' +
-    '<div class="' + prefix + '-text"></div>' +
+    '<div class="' + prefix + '__buttons"></div>' +
+    '<div class="' + prefix + '__text"></div>' +
   '</div>';
 
 var types = [
@@ -39,7 +39,7 @@ function Message(text, type, delay) {
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
-  this.element.className += ' ' + prefix + '-' + this.type;
+  this.element.className += ' ' + prefix + '--' + this.type;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
   document.body.appendChild(this.element);
@@ -89,6 +89,7 @@ Message.prototype.hide = function (fn) {
 Message.prototype.button = function (name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
+  button.className = prefix + '__button';
   this.element.children[0].appendChild(button);
   this.element.removeEventListener('click', this.hide, false);
   Message.reposition();

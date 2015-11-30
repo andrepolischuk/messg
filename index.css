@@ -39,42 +39,42 @@
   }
 }
 
-.messg-default {
+.messg--default {
   background-color: #323232;
 }
 
-.messg-success {
+.messg--success {
   background-color: #4caf50;
 }
 
-.messg-info {
+.messg--info {
   background-color: #00bcd4;
 }
 
-.messg-warning {
+.messg--warning {
   background-color: #ff9800;
 }
 
-.messg-error {
+.messg--error {
   background-color: #f44336;
 }
 
-.messg-text {
+.messg__text {
   padding: 10px 14px;
 }
 
-.messg-buttons {
+.messg__buttons {
   float: right;
   padding: 10px;
 }
 
 .messg,
-.messg button {
+.messg__button {
   color: #f5f5f5;
   font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-.messg button {
+.messg__button {
   display: inline-block;
   border: 0 none;
   -webkit-border-radius: 1px;
@@ -88,42 +88,42 @@
   cursor: pointer;
 }
 
-.messg-default button {
+.messg--default .messg__button {
   background-color: #212121;
 }
 
-.messg-default button:hover {
+.messg--default .messg__button:hover {
   background-color: #000;
 }
 
-.messg-success button {
+.messg--success .messg__button {
   background-color: #43a047;
 }
 
-.messg-success button:hover {
+.messg--success .messg__button:hover {
   background-color: #388e3c;
 }
 
-.messg-info button {
+.messg--info .messg__button {
   background-color: #00acc1;
 }
 
-.messg-info button:hover {
+.messg--info .messg__button:hover {
   background-color: #0097a7;
 }
 
-.messg-warning button {
+.messg--warning .messg__button {
   background-color: #fb8c00;
 }
 
-.messg-warning button:hover {
+.messg--warning .messg__button:hover {
   background-color: #f57c00;
 }
 
-.messg-error button {
+.messg--error .messg__button {
   background-color: #e53935;
 }
 
-.messg-error button:hover {
+.messg--error .messg__button:hover {
   background-color: #d32f2f;
 }
