@@ -36,7 +36,6 @@ function Message(text, type, delay) {
   this.delay = typeof type === 'number' ? type : delay;
   this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.exist = false;
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
@@ -62,10 +61,8 @@ function Message(text, type, delay) {
 }
 
 Message.prototype.show = function () {
-  this.exist = true;
   this.element.style.opacity = '1.0';
   Message.reposition();
-  var self = this;
 
   if (this.delay) {
     setTimeout(this.hide, this.delay + Message.speed);
@@ -80,16 +77,14 @@ Message.prototype.hide = function (fn) {
     return this;
   }
 
-  this.exist = false;
   this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
+  flow.splice(flow.indexOf(this), 1);
   Message.reposition();
-  var self = this;
 
   setTimeout(function () {
-    self.element.parentNode.removeChild(self.element);
-    flow.splice(flow.indexOf(self), 1);
-  }, Message.speed);
+    this.element.parentNode.removeChild(this.element);
+  }.bind(this), Message.speed);
 };
 
 Message.prototype.button = function (name, fn) {
@@ -98,12 +93,11 @@ Message.prototype.button = function (name, fn) {
   this.element.children[0].appendChild(button);
   this.element.removeEventListener('click', this.hide, false);
   Message.reposition();
-  var self = this;
 
   button.addEventListener('click', function () {
     if (typeof fn === 'function') fn(name.toLowerCase());
-    self.hide();
-  }, false);
+    this.hide();
+  }.bind(this), false);
 
   return this;
 };
@@ -112,9 +106,7 @@ Message.reposition = function () {
   var pos = margin;
 
   eachReverse(flow, function (message) {
-    if (message.exist) {
-      message.element.style[Message.position] = pos + 'px';
-      pos += message.element.offsetHeight + margin;
-    }
+    message.element.style[Message.position] = pos + 'px';
+    pos += message.element.offsetHeight + margin;
   });
 };
