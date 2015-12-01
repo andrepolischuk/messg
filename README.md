@@ -8,18 +8,24 @@
 npm install --save messg
 ```
 
-```sh
-component install andrepolischuk/messg
+## Usage
+
+```js
+var messg = require('messg');
+
+messg
+  .success('Awesome!')
+  .button('Ok');
 ```
 
 ## API
 
 ### messg(text[, type, delay])
 
-Create message with specified `text` and `type`.
+Create `Message` instance with specified `text` and `type`.
 Аutohide timeout is specified via `delay` parameter.
 
-Possible types:
+#### Types:
 
 * default
 * success
@@ -77,13 +83,16 @@ messg
   });
 ```
 
-### messg.set(key, value)
+### messg.clean()
 
-Setting options
+Close all messages in flow
 
-* `speed` - show and hide speed (ms), default `250`
-* `position` - messages position `top` or `bottom`, default `top`
-* `flow` - disable messages flow if `false`
+## Options
+
+* `messg.speed` — show and hide speed (ms), default `250`
+* `messg.position` — messages position `top` or `bottom`, default `top`
+* `messg.flow` — disable messages flow if `false`
+* `messg.max` — max flow length, default `false`
 
 ## License
 
