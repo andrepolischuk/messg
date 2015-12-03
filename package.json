@@ -5,7 +5,7 @@
   "repository": "andrepolischuk/messg",
   "dependencies": {
     "bootstrap-gh-pages": "^0.2.1",
-    "messg": "^1.3.6"
+    "messg": "^2.0.0"
   },
   "devDependencies": {
     "babelify": "^6.3.0",

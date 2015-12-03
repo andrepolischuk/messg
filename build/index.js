@@ -51,13 +51,13 @@ btnOk.addEventListener('click', function () {
 
 btnYesNo.addEventListener('click', function () {
   _messg2['default'].warning('Are you sure?').button('Yes', function () {
-    _messg2['default'].warning('You say "Yes"', 5000);
+    _messg2['default'].success('You say "Yes"', 5000);
   }).button('No', function () {
-    _messg2['default'].warning('You say "No"', 5000);
+    _messg2['default'].error('You say "No"', 5000);
   });
 }, false);
 
-},{"messg":10}],2:[function(require,module,exports){
+},{"messg":9}],2:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -233,20 +233,22 @@ var rootParent = {}
  */
 Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
   ? global.TYPED_ARRAY_SUPPORT
-  : (function () {
-      function Bar () {}
-      try {
-        var arr = new Uint8Array(1)
-        arr.foo = function () { return 42 }
-        arr.constructor = Bar
-        return arr.foo() === 42 && // typed array instances can be augmented
-            arr.constructor === Bar && // constructor can be set
-            typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-            arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-      } catch (e) {
-        return false
-      }
-    })()
+  : typedArraySupport()
+
+function typedArraySupport () {
+  function Bar () {}
+  try {
+    var arr = new Uint8Array(1)
+    arr.foo = function () { return 42 }
+    arr.constructor = Bar
+    return arr.foo() === 42 && // typed array instances can be augmented
+        arr.constructor === Bar && // constructor can be set
+        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+  } catch (e) {
+    return false
+  }
+}
 
 function kMaxLength () {
   return Buffer.TYPED_ARRAY_SUPPORT
@@ -1200,7 +1202,7 @@ Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
   if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  this[offset] = value
+  this[offset] = (value & 0xff)
   return offset + 1
 }
 
@@ -1217,7 +1219,7 @@ Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
   } else {
     objectWriteUInt16(this, value, offset, true)
@@ -1231,7 +1233,7 @@ Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert
   if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     this[offset] = (value >>> 8)
-    this[offset + 1] = value
+    this[offset + 1] = (value & 0xff)
   } else {
     objectWriteUInt16(this, value, offset, false)
   }
@@ -1253,7 +1255,7 @@ Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert
     this[offset + 3] = (value >>> 24)
     this[offset + 2] = (value >>> 16)
     this[offset + 1] = (value >>> 8)
-    this[offset] = value
+    this[offset] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, true)
   }
@@ -1268,7 +1270,7 @@ Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert
     this[offset] = (value >>> 24)
     this[offset + 1] = (value >>> 16)
     this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
+    this[offset + 3] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, false)
   }
@@ -1321,7 +1323,7 @@ Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
   if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
   if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
   if (value < 0) value = 0xff + value + 1
-  this[offset] = value
+  this[offset] = (value & 0xff)
   return offset + 1
 }
 
@@ -1330,7 +1332,7 @@ Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) 
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
   } else {
     objectWriteUInt16(this, value, offset, true)
@@ -1344,7 +1346,7 @@ Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) 
   if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
     this[offset] = (value >>> 8)
-    this[offset + 1] = value
+    this[offset + 1] = (value & 0xff)
   } else {
     objectWriteUInt16(this, value, offset, false)
   }
@@ -1356,7 +1358,7 @@ Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) 
   offset = offset | 0
   if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
   if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
+    this[offset] = (value & 0xff)
     this[offset + 1] = (value >>> 8)
     this[offset + 2] = (value >>> 16)
     this[offset + 3] = (value >>> 24)
@@ -1375,7 +1377,7 @@ Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) 
     this[offset] = (value >>> 24)
     this[offset + 1] = (value >>> 16)
     this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
+    this[offset + 3] = (value & 0xff)
   } else {
     objectWriteUInt32(this, value, offset, false)
   }
@@ -1650,7 +1652,7 @@ function utf8ToBytes (string, units) {
       }
 
       // valid surrogate pair
-      codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
     } else if (leadSurrogate) {
       // valid bmp char, but last char was a lead
       if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
@@ -1729,43 +1731,7 @@ function blitBuffer (src, dst, offset, length) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":2,"ieee754":8,"is-array":9}],4:[function(require,module,exports){
-var bind = window.addEventListener ? 'addEventListener' : 'attachEvent',
-    unbind = window.removeEventListener ? 'removeEventListener' : 'detachEvent',
-    prefix = bind !== 'addEventListener' ? 'on' : '';
-
-/**
- * Bind `el` event `type` to `fn`.
- *
- * @param {Element} el
- * @param {String} type
- * @param {Function} fn
- * @param {Boolean} capture
- * @return {Function}
- * @api public
- */
-
-exports.bind = function(el, type, fn, capture){
-  el[bind](prefix + type, fn, capture || false);
-  return fn;
-};
-
-/**
- * Unbind `el` event `type`'s callback `fn`.
- *
- * @param {Element} el
- * @param {String} type
- * @param {Function} fn
- * @param {Boolean} capture
- * @return {Function}
- * @api public
- */
-
-exports.unbind = function(el, type, fn, capture){
-  el[unbind](prefix + type, fn, capture || false);
-  return fn;
-};
-},{}],5:[function(require,module,exports){
+},{"base64-js":2,"ieee754":7,"is-array":8}],4:[function(require,module,exports){
 (function (Buffer){
 /**
  * toString ref.
@@ -1805,7 +1771,7 @@ module.exports = function(val){
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":3}],6:[function(require,module,exports){
+},{"buffer":3}],5:[function(require,module,exports){
 'use strict';
 
 try {
@@ -1848,7 +1814,7 @@ function string(obj, fn) {
   }
 }
 
-},{"component-type":5,"type":5}],7:[function(require,module,exports){
+},{"component-type":4,"type":4}],6:[function(require,module,exports){
 'use strict';
 
 try {
@@ -1897,7 +1863,7 @@ function string(obj, fn) {
   }
 }
 
-},{"component-type":5,"type":5}],8:[function(require,module,exports){
+},{"component-type":4,"type":4}],7:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -1983,7 +1949,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 /**
  * isArray
@@ -2018,26 +1984,17 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
-
-try {
-  var events = require('event');
-} catch (err) {
-  var events = require('component-event');
-}
-
 var each = require('ea');
 var eachReverse = require('each-reverse');
-var uniquid = require('uniquid');
-var body;
-var flow = {};
+var flow = [];
 var margin = 10;
 var prefix = 'messg';
 
 var template = '<div class="' + prefix + '">' +
-    '<div class="' + prefix + '-buttons"></div>' +
-    '<div class="' + prefix + '-text"></div>' +
+    '<div class="' + prefix + '__buttons"></div>' +
+    '<div class="' + prefix + '__text"></div>' +
   '</div>';
 
 var types = [
@@ -2049,23 +2006,12 @@ var types = [
 ];
 
 module.exports = Message;
-
 Message.speed = 250;
 Message.position = 'top';
 Message.flow = true;
 
-module.exports.set = function(key, value) {
-  if (typeof key === 'object') {
-    each(key, function(val, k) {
-      Message[k] = val;
-    });
-  } else if (value) {
-    Message[key] = value;
-  }
-};
-
-each(types, function(type) {
-  module.exports[type] = function(text, delay) {
+each(types, function (type) {
+  module.exports[type] = function (text, delay) {
     if (!text) return;
     return new Message(text, type, delay);
   };
@@ -2074,115 +2020,88 @@ each(types, function(type) {
 function Message(text, type, delay) {
   if (!text) return;
   if (!(this instanceof Message)) return new Message(text, type, delay);
-  this.id = uniquid(prefix);
   this.delay = typeof type === 'number' ? type : delay;
   this.type = typeof type === 'string' ? type : types[0];
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
-  this.exist = false;
   this.element = document.createElement('div');
   this.element.innerHTML = template;
   this.element = this.element.children[0];
-  this.element.style.display = 'none';
-  this.element.style.opacity = '0.0';
-  this.element.style.transition = 'all ' +
-    Message.speed / 1000 + 's ease-in-out';
-  this.element.className += ' ' + prefix + '-' + this.type;
-  this.element.id = this.id;
+  this.element.className += ' ' + prefix + '--' + this.type;
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
-  if (!body) body = document.getElementsByTagName('body')[0];
-  body.appendChild(this.element);
+  document.body.appendChild(this.element);
+  this.element.style.opacity = '0.0';
+  this.element.style.transition = 'all ' + Message.speed + 'ms ease-in-out';
+  this.element.offsetWidth;
 
-  if (!Message.flow) {
-    each(flow, function(message) {
-      message.hide();
+  if (!Message.flow || Message.max) {
+    eachReverse(flow, function (message, i) {
+      if (!Message.max || i <= flow.length - Message.max) message.hide();
     });
   }
 
-  flow[this.id] = this;
+  flow.push(this);
+  this.hide = this.hide.bind(this);
+  this.element.addEventListener('click', this.hide, false);
   this.show();
-  var self = this;
-
-  setTimeout(function() {
-    if (!self.element.children[0].children.length) {
-      events.bind(self.element, 'click', function() {
-        self.hide();
-      });
-    }
-  }, Message.speed);
 }
 
-Message.prototype.show = function() {
-  this.exist = true;
-  this.element.style.display = 'block';
-  reposition();
-  var self = this;
-
-  setTimeout(function() {
-    self.element.style.opacity = '1.0';
-  }, 50);
+Message.prototype.show = function () {
+  this.element.style.opacity = '1.0';
+  Message.reposition();
 
   if (this.delay) {
-    setTimeout(function() {
-      self.hide();
-    }, self.delay + Message.speed);
+    setTimeout(this.hide, this.delay + Message.speed);
   }
 
   return this;
 };
 
-Message.prototype.hide = function(fn) {
+Message.prototype.hide = function (fn) {
   if (typeof fn === 'function') {
     this.fn = fn;
     return this;
   }
 
-  this.exist = false;
   this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
-  reposition();
-  var self = this;
+  flow.splice(flow.indexOf(this), 1);
+  Message.reposition();
 
-  setTimeout(function() {
-    self.element.style.display = 'none';
-    body.removeChild(self.element);
-    delete flow[self.id];
-  }, Message.speed);
+  setTimeout(function () {
+    this.element.parentNode.removeChild(this.element);
+  }.bind(this), Message.speed);
 };
 
-Message.prototype.button = function(name, fn) {
+Message.prototype.button = function (name, fn) {
   var button = document.createElement('button');
   button.innerHTML = name;
+  button.className = prefix + '__button';
   this.element.children[0].appendChild(button);
-  reposition();
-  var self = this;
+  this.element.removeEventListener('click', this.hide, false);
+  Message.reposition();
 
-  events.bind(button, 'click', function() {
+  button.addEventListener('click', function () {
     if (typeof fn === 'function') fn(name.toLowerCase());
-    self.hide();
-  });
+    this.hide();
+  }.bind(this), false);
 
   return this;
 };
 
-function reposition() {
+Message.reposition = function () {
   var pos = margin;
 
-  eachReverse(flow, function(message) {
-    if (message.exist) {
-      message.element.style[Message.position] = pos + 'px';
-      pos += message.element.offsetHeight + margin;
-    }
+  eachReverse(flow, function (message) {
+    message.element.style[Message.position] = pos + 'px';
+    pos += message.element.offsetHeight + margin;
   });
-}
-
-},{"component-event":4,"ea":6,"each-reverse":7,"event":4,"uniquid":11}],11:[function(require,module,exports){
-'use strict';
-
-module.exports = function(prefix) {
-  var uid = parseInt((new Date()).valueOf() +
-    (Math.random() * 1000000).toFixed()).toString(36);
-  return (prefix || '') + uid;
 };
 
-},{}]},{},[1]);
+Message.clean = function () {
+  eachReverse(flow, function (message) {
+    message.hide();
+  });
+};
+
+},{"ea":5,"each-reverse":6}]},{},[1]);

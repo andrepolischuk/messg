@@ -49,8 +49,8 @@ btnYesNo.addEventListener('click', () => {
   messg
     .warning('Are you sure?')
     .button('Yes', () => {
-      messg.warning('You say "Yes"', 5000);
+      messg.success('You say "Yes"', 5000);
     }).button('No', () => {
-      messg.warning('You say "No"', 5000);
+      messg.error('You say "No"', 5000);
     });
 }, false);
