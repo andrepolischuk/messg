@@ -2,6 +2,8 @@
 
 > Messages via CSS3 animations
 
+![](screenshot.png)
+
 ## Install
 
 ```sh
