@@ -11,7 +11,7 @@ npm install --save messg
 ## Usage
 
 ```js
-var messg = require('messg');
+import messg from 'messg';
 
 messg
   .success('Awesome!')
@@ -22,16 +22,33 @@ messg
 
 ### messg(text[, type, delay])
 
-Create `Message` instance with specified `text` and `type`.
-Аutohide timeout is specified via `delay` parameter.
+Create `Message` instance.
 
-#### Types:
+#### text
+
+Type: `string`
+
+Message text.
+
+#### type
+
+Type: `string`  
+Default: `'default'`
+
+Message type:
 
 * default
 * success
 * info
 * warning
 * error
+
+#### delay
+
+Type: `number`  
+Default: `null`
+
+Аutohide timeout.
 
 ### messg.default(text[, delay])
 ### messg.success(text[, delay])
@@ -48,20 +65,34 @@ messg.success('Task completed', 2500);
 
 ### .button(name[, fn])
 
-Add buttons with handler
+Add button.
+
+#### name
+
+Type: `string`
+
+Button title.
+
+#### fn
+
+Type: `function`
+
+Handler for click on the button.
+
+Buttons with handler:
 
 ```js
 messg
   .warning('Are you sure?')
-  .button('Yes', function() {
+  .button('Yes', () => {
 
   })
-  .button('No', function() {
+  .button('No', () => {
 
   });
 ```
 
-Add simple close button
+Simple close button:
 
 ```js
 messg
@@ -69,23 +100,29 @@ messg
   .button('Ok');
 ```
 
-If buttons not specified, close message by clicking on it
+If buttons not specified, close message by clicking on it.
 
 ### .hide(fn)
 
-Add hide handler
+Add hide handler.
+
+#### fn
+
+Type: `function`
+
+Handler for hide the message.
 
 ```js
 messg
   .warning('Hello!')
-  .hide(function() {
+  .hide(() => {
 
   });
 ```
 
 ### messg.clean()
 
-Close all messages in flow
+Close all messages in flow.
 
 ## Options
 
