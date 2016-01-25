@@ -76,6 +76,7 @@ Message.prototype.hide = function (fn) {
     return this;
   }
 
+  if (this.isHidden()) return;
   this.element.style.opacity = '0.0';
   if (this.fn) this.fn();
   flow.splice(flow.indexOf(this), 1);
@@ -95,11 +96,16 @@ Message.prototype.button = function (name, fn) {
   Message.reposition();
 
   button.addEventListener('click', function () {
+    if (this.isHidden()) return;
     if (typeof fn === 'function') fn(name.toLowerCase());
     this.hide();
   }.bind(this), false);
 
   return this;
+};
+
+Message.prototype.isHidden = function () {
+  return flow.indexOf(this) < 0;
 };
 
 Message.reposition = function () {
