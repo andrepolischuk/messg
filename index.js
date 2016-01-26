@@ -8,31 +8,21 @@ var template = '<div class="' + prefix + '">' +
     '<div class="' + prefix + '__text"></div>' +
   '</div>';
 
-var types = [
-  'default',
-  'success',
-  'info',
-  'warning',
-  'error'
-];
-
 module.exports = Message;
+module.exports.default = getMessageByType('default');
+module.exports.success = getMessageByType('success');
+module.exports.info = getMessageByType('info');
+module.exports.warning = getMessageByType('warning');
+module.exports.error = getMessageByType('error');
 Message.speed = 250;
 Message.position = 'top';
 Message.flow = true;
-
-types.forEach(function (type) {
-  module.exports[type] = function (text, delay) {
-    if (!text) return;
-    return new Message(text, type, delay);
-  };
-});
 
 function Message(text, type, delay) {
   if (!text) return;
   if (!(this instanceof Message)) return new Message(text, type, delay);
   this.delay = typeof type === 'number' ? type : delay;
-  this.type = typeof type === 'string' ? type : types[0];
+  this.type = typeof type === 'string' ? type : 'default';
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '');
   this.element = document.createElement('div');
   this.element.innerHTML = template;
@@ -91,7 +81,6 @@ Message.prototype.button = function (name, fn) {
   button.className = prefix + '__button';
   this.element.children[0].appendChild(button);
   this.element.removeEventListener('click', this.hide, false);
-  Message.reposition();
 
   button.addEventListener('click', function () {
     if (this.isHidden()) return;
@@ -120,3 +109,10 @@ Message.clean = function () {
     message.hide();
   });
 };
+
+function getMessageByType(type) {
+  return function (text, delay) {
+    if (!text) return;
+    return new Message(text, type, delay);
+  };
+}
