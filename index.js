@@ -1,6 +1,4 @@
 'use strict';
-var each = require('ea');
-var eachReverse = require('each-reverse');
 var flow = [];
 var margin = 10;
 var prefix = 'messg';
@@ -23,7 +21,7 @@ Message.speed = 250;
 Message.position = 'top';
 Message.flow = true;
 
-each(types, function (type) {
+types.forEach(function (type) {
   module.exports[type] = function (text, delay) {
     if (!text) return;
     return new Message(text, type, delay);
@@ -48,12 +46,12 @@ function Message(text, type, delay) {
   this.element.offsetWidth;
 
   if (!Message.flow || Message.max) {
-    eachReverse(flow, function (message, i) {
+    flow.forEach(function (message, i) {
       if (!Message.max || i <= flow.length - Message.max) message.hide();
     });
   }
 
-  flow.push(this);
+  flow.unshift(this);
   this.hide = this.hide.bind(this);
   this.element.addEventListener('click', this.hide, false);
   this.show();
@@ -111,14 +109,14 @@ Message.prototype.isHidden = function () {
 Message.reposition = function () {
   var pos = margin;
 
-  eachReverse(flow, function (message) {
+  flow.forEach(function (message) {
     message.element.style[Message.position] = pos + 'px';
     pos += message.element.offsetHeight + margin;
   });
 };
 
 Message.clean = function () {
-  eachReverse(flow, function (message) {
+  flow.forEach(function (message) {
     message.hide();
   });
 };
