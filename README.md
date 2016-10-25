@@ -128,10 +128,28 @@ Close all messages in flow.
 
 ## Options
 
-* `messg.speed` — show and hide speed (ms), default `250`
-* `messg.position` — messages position `top` or `bottom`, default `top`
-* `messg.flow` — disable messages flow if `false`
-* `messg.max` — max flow length, default `false`
+### messg.speed
+
+Show and hide speed (ms), default `250`.
+
+### messg.position
+
+Messages position:
+
+* `top` — default
+* `top-left`
+* `top-right`
+* `bottom`
+* `bottom-left`
+* `bottom-right`
+
+### messg.flow
+
+Disable messages flow if `false`.
+
+### messg.max
+
+Max flow length, default `false`.
 
 ## License
 

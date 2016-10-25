@@ -23,6 +23,16 @@
     left: 23%;
     right: 23%;
   }
+
+  .messg--left {
+    left: 10px !important;
+    right: 45%;
+  }
+
+  .messg--right {
+    left: 45%;
+    right: 10px !important;
+  }
 }
 
 @media (min-width: 992px) {
@@ -30,12 +40,28 @@
     left: 28%;
     right: 28%;
   }
+
+  .messg--left {
+    right: 55%;
+  }
+
+  .messg--right {
+    left: 55%;
+  }
 }
 
 @media (min-width: 1200px) {
   .messg {
     left: 33%;
     right: 33%;
+  }
+
+  .messg--left {
+    right: 65%;
+  }
+
+  .messg--right {
+    left: 65%;
   }
 }
 

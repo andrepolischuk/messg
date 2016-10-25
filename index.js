@@ -28,6 +28,11 @@ function Message(text, type, delay) {
   this.element.innerHTML = template;
   this.element = this.element.children[0];
   this.element.className += ' ' + prefix + '--' + this.type;
+
+  if (/-/.test(Message.position)) {
+    this.element.className += ' ' + prefix + '--' + Message.position.split(/-/)[1];
+  }
+
   this.element.setAttribute('role', this.type);
   this.element.children[1].innerHTML = this.text;
   document.body.appendChild(this.element);
@@ -96,11 +101,12 @@ Message.prototype.isHidden = function () {
 };
 
 Message.reposition = function () {
-  var pos = margin;
+  var top = margin;
+  var verticalPosition = Message.position.split(/-/)[0];
 
   flow.forEach(function (message) {
-    message.element.style[Message.position] = pos + 'px';
-    pos += message.element.offsetHeight + margin;
+    message.element.style[verticalPosition] = top + 'px';
+    top += message.element.offsetHeight + margin;
   });
 };
 
