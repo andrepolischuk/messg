@@ -1,6 +1,6 @@
 {
   "name": "messg",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Messages via CSS3 animations",
   "main": "index.js",
   "style": "index.css",
