@@ -18,7 +18,8 @@ module.exports.error = getMessageByType('error')
 Message.speed = 250
 Message.position = 'top'
 Message.flow = true
-Message.delay = 0
+Message.max = null
+Message.delay = null
 
 function Message (text, type, delay) {
   if (!text) return

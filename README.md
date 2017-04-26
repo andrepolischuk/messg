@@ -130,13 +130,19 @@ Close all messages in flow.
 
 ### messg.speed
 
-Show and hide speed (ms), default `250`.
+Type: `number`  
+Default: `250`
+
+Show and hide speed (ms).
 
 ### messg.position
 
+Type: `string`  
+Default: `'top'`
+
 Messages position:
 
-* `top` — default
+* `top`
 * `top-left`
 * `top-right`
 * `bottom`
@@ -145,15 +151,24 @@ Messages position:
 
 ### messg.flow
 
+Type: `boolean`  
+Default: `true`
+
 Disable messages flow if `false`.
 
 ### messg.max
 
-Max flow length, default `false`.
+Type: `number`  
+Default: `null`
+
+Max flow length.
 
 ### messg.delay
 
-Global delay for all messages, default `null`.
+Type: `number`  
+Default: `null`
+
+Global delay for all messages.
 
 ## License
 
