@@ -1,15 +1,26 @@
 {
   "name": "messg",
-  "description": "Messages via CSS3 animations",
   "version": "2.1.1",
+  "description": "Messages via CSS3 animations",
+  "main": "index.js",
+  "style": "index.css",
+  "files": [
+    "index.js",
+    "index.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrepolischuk/messg.git"
+  },
   "keywords": [
     "message",
     "alert",
     "confirm"
   ],
-  "repository": "andrepolischuk/messg",
-  "main": "index.js",
-  "style": "index.css",
   "author": "Andrey Polischuk <me@andrepolischuk.com> (https://andrepolischuk.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andrepolischuk/messg/issues"
+  },
+  "homepage": "https://github.com/andrepolischuk/messg"
 }
