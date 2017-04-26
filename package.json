@@ -8,6 +8,9 @@
     "index.js",
     "index.css"
   ],
+  "scripts": {
+    "test": "standard"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andrepolischuk/messg.git"
@@ -22,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/andrepolischuk/messg/issues"
   },
-  "homepage": "https://github.com/andrepolischuk/messg"
+  "homepage": "https://github.com/andrepolischuk/messg",
+  "devDependencies": {
+    "standard": "^10.0.2"
+  }
 }

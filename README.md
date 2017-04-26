@@ -1,4 +1,4 @@
-# messg
+# messg [![Build Status][travis-image]][travis-url]
 
 > Messages via CSS3 animations
 
@@ -154,3 +154,6 @@ Max flow length, default `false`.
 ## License
 
 MIT
+
+[travis-url]: https://travis-ci.org/andrepolischuk/messg
+[travis-image]: https://travis-ci.org/andrepolischuk/messg.svg?branch=master
