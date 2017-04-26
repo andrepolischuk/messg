@@ -151,6 +151,10 @@ Disable messages flow if `false`.
 
 Max flow length, default `false`.
 
+### messg.delay
+
+Global delay for all messages, default `null`.
+
 ## License
 
 MIT

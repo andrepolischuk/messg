@@ -14,14 +14,16 @@ module.exports.success = getMessageByType('success')
 module.exports.info = getMessageByType('info')
 module.exports.warning = getMessageByType('warning')
 module.exports.error = getMessageByType('error')
+
 Message.speed = 250
 Message.position = 'top'
 Message.flow = true
+Message.delay = 0
 
 function Message (text, type, delay) {
   if (!text) return
   if (!(this instanceof Message)) return new Message(text, type, delay)
-  this.delay = typeof type === 'number' ? type : delay
+  this.delay = (typeof type === 'number' ? type : delay) || Message.delay
   this.type = typeof type === 'string' ? type : 'default'
   this.text = text.replace(/(<script.*>.*<\/script>)/gim, '')
   this.element = document.createElement('div')
