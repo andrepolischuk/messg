@@ -97,7 +97,7 @@
 .messg,
 .messg__button {
   color: #f5f5f5;
-  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  font-family: inherit;
 }
 
 .messg__button {
